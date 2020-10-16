@@ -60,11 +60,3 @@ download_s3 <- function(fl_names, s3_folder_url, download_dir) {
     message('All files are present in ', download_dir)
   }
 }
-
-download_s3(fl_names =  c('dng_2016_round1.qs', 'dng_2015_round2.qs'),
-            s3_folder_url = 's3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/',
-            download_dir = getwd())
-
-download_s3(fl_names =  c('dng_2014_round2.qs'),
-            s3_folder_url = 's3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/',
-            download_dir = getwd())
