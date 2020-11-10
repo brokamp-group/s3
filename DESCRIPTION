@@ -1,0 +1,23 @@
+Package: s3
+Title: What the Package Does (One Line, Title Case)
+Version: 0.1
+Authors@R: 
+    person(given = "Cole",
+           family = "Brokamp",
+           role = c("aut", "cre"),
+           email = "cole.brokamp@gmail.com",
+           comment = c(ORCID = "0000-0002-0289-3151"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    cli,
+    reticulate,
+    magrittr,
+    prettyunits,
+    fs
+Suggests: 
+    testthat
