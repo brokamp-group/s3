@@ -19,17 +19,45 @@ Here, we use the `s3` scheme as defined by AWS. For example, the URI for a file 
 
 Download a single file with:
 
+```r
+
+```
+
+If a file has already been downloaded or already exists, then it will not be re-downloaded:
+
+```r
+
+```
+
 
 Download multiple files with:
 
+```r
+
+```
+
+## Downloaded file paths
+
+`s3_get` and `s3_get_files` both invisibly return the file path(s) of the downloaded files so that they can be further used to access the downloaded files. This makes it possible for different users with different operating systems and/or different project file structures and locations to utilize a downloaded S3 file without changing their source code:
+
+```r
+s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
+    readRDS()
+```
+
 ### Customizing download location
 
-By default, files downloaded from S3 will be stored in a folder called `s3_downloads` located within the current working directory. This can be changed when downloading files by using the `download_folder` argument.
+By default, files downloaded from S3 will be stored in a folder called `s3_downloads` located within the current working directory. This can be changed when downloading files by using the `download_folder` argument:
+
+```r
+
+```
 
 This can also be changed for the entire session by using the option `s3.download_folder`. For example, specifying `options(s3.download_folder = /scratch/broeg1/s3_downloads)` will write all downloaded files to `/scratch/broeg1/s3_downloads`.
 
 Using a folder for all downloads will prevent duplication of files within different working directories, instead allowing all R sessions to access these files. This could be combined with something like [`rappdirs`](https://github.com/r-lib/rappdirs) to share files across users or temporarily cache them.
 
+As above, this feature also allows different users to store downloaded S3 files in different locations (e.g. a network mounted drive, a scratch folder on a high performance cluster, an external hard drive, a temporary directory) without having to change their R script to specify file paths specific to their computer.
 
 
 ## Installation
