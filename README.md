@@ -1,5 +1,10 @@
 # s3
 
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/s3)](https://CRAN.R-project.org/package=s3)
+[![R build status](https://github.com/geomarker-io/s3/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/s3/actions)
+<!-- badges: end -->
+
 > download files from AWS S3
 
 ## Usage
