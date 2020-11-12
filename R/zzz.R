@@ -2,7 +2,8 @@
 boto <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  boto <<- reticulate::import("boto3", delay_load = TRUE)$client("s3")
+  boto <<- reticulate::import("boto3", delay_load = TRUE)
+  # boto <<- reticulate::import("boto3", delay_load = TRUE)$client("s3")
 }
 
 # call this in functions before using boto for informative error messages
