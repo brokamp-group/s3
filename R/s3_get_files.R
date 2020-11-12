@@ -16,15 +16,14 @@ s3_get_files <- function(s3_uri,
     if (confirm) ui_confirm()
 
     f <- function() {
-        cli::cli_alert_info("Now downloading {n_files} file{?s}, {prettyunits::pretty_bytes(files_size)} in total size")
         sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_files} files.")
 
         for (i in n_files:1) {
-            s3_get(s3_uri[i], quiet = quiet, force = force)
             cli::cli_status_update(
                 id = sb,
                 "{cli::symbol$arrow_right} Got {n_files - i} file{?s}, downloading {i}"
             )
+            s3_get(s3_uri[i], quiet = quiet, force = force)
         }
         cli::cli_status_clear(id = sb)
     }

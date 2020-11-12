@@ -23,8 +23,8 @@ s3_get <- function(s3_uri,
 
     if (!quiet) {
         cli::cli_alert_info(c(
-            "{.file {s3_uri}} is {.strong {print(s3_file_size(s3_uri))}}",
-            "; downloading to {.file dest_file}"
+            "{.file {s3_uri}} is {.strong {prettyunits::pretty_bytes(s3_file_size(s3_uri))}}",
+            "; downloading to {.file {dest_file}}"
         ))
     }
 

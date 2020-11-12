@@ -6,5 +6,8 @@ skip_if_no_boto <- function() {
 
 delete_test_download_folder <- function() {
   download_folder <- getOption("s3.download_folder", fs::path_wd("s3_downloads"))
-  if (fs::dir_exists(download_folder)) fs::dir_delete(download_folder)
+  if (fs::dir_exists(download_folder)) {
+    fs::dir_delete(download_folder)
+    cli::cli_alert_success("Deleted {download_folder}")
+  }
 }
