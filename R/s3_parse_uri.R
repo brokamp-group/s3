@@ -11,6 +11,7 @@ s3_parse_uri <- function(s3_uri) {
         file_path_parts[3:(length(file_path_parts) - 1)] %>%
         fs::path_join() %>%
         as.character()
+    if (length(file_path_parts) == 3) folder <- NULL # if file is in root of bucket (no folder)
     key <-
         fs::path_join(c(folder, file_name)) %>%
         as.character()
