@@ -2,7 +2,7 @@
 boto <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  # use superassignment to update global reference to scipy
+  reticulate::configure_environment(pkgname)
   boto <<- reticulate::import("boto3", delay_load = TRUE)$client("s3")
 }
 
