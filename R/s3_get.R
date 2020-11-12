@@ -1,13 +1,14 @@
 # download s3 file if not already present
 # invisibly returns destination file path
-s3_get <- function(s3_uri, local_s3_folder = getwd(), quiet = FALSE, force = FALSE) {
-
+s3_get <- function(s3_uri,
+                   download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
+                   quiet = FALSE,
+                   force = FALSE) {
     parsed_uri <- s3_parse_uri(s3_uri)
 
     dest_folder <-
         fs::path_join(c(
-            local_s3_folder,
-            "s3",
+            download_folder,
             parsed_uri$bucket,
             parsed_uri$folder
         ))
@@ -37,15 +38,3 @@ s3_get <- function(s3_uri, local_s3_folder = getwd(), quiet = FALSE, force = FAL
 
     return(invisible(dest_file))
 }
-
-# this could be included in a script independent of user assuming that all files are in working directory
-# how could we allow for setting of a custom local_s3_folder without changing the code??  user option?
-
-# To use environment variables, do the following:
-
-# $ export AWS_ACCESS_KEY_ID=<access_key>
-# $ export AWS_SECRET_ACCESS_KEY=<secret_key>
-
-# should we do this too??
-s3_put <- function() {}
-
