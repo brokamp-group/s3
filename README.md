@@ -78,9 +78,7 @@ remotes::install_github("geomarker-io/s3")
 
 The package uses (`reticulate`)[https://rstudio.github.io/reticulate/] to expose functions from the [`boto3`](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) python module.  This allows us to take advantage of its concurrent transfer operations using threads, but requires the module to be installed.
 
- Although the package can be installed and loaded without the `boto3` python module, its core functionality will not be available without it. In this case, you will be advised to install it from within `R` by calling `reticulate::py_install("boto3")`, which will automatically install it within a virtualenv or Conda environment named `r-reticulate`. Additionally, if your system does not have a compatible version of python, you will be instructed to install [`miniconda`](https://docs.conda.io/en/latest/miniconda.html).
-
- Using the newer versions of `reticulate` allows us to automatically configure a python environment and install the `boto3` module. If necessary, the user will be prompted to download and install [`miniconda`](https://docs.conda.io/en/latest/miniconda.html).
+ Although the package can be installed and loaded without the `boto3` python module, its core functionality will not be available without it. In this case, you will be advised to install it from within `R` by calling `reticulate::py_install("boto3")`, which will automatically install it within a virtualenv or Conda environment named `r-reticulate`. Additionally, if your system does not have a compatible version of python, you will be instructed to install [`miniconda`](https://docs.conda.io/en/latest/miniconda.html) using `reticulate::install_miniconda()` from within `R`.
 
 ### Setting up AWS credentials
 

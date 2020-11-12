@@ -2,7 +2,6 @@
 boto <- NULL
 
 .onLoad <- function(libname, pkgname) {
-  # reticulate::configure_environment(pkgname)
   boto <<- reticulate::import("boto3", delay_load = TRUE)$client("s3")
 }
 
