@@ -47,7 +47,7 @@ s3_get <- function(s3_uri,
     }
 
 
-    boto$download_file(
+    boto$client("s3")$download_file(
         Bucket = parsed_uri$bucket,
         Key = parsed_uri$key,
         Filename = dest_file

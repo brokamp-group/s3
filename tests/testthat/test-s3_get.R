@@ -37,7 +37,7 @@ test_that("s3_get_files downloads all files (forcing no user confirmation)", {
 test_that("s3_get_files downloads larger files with informative progress messages and user confirmation", {
   skip_if_no_boto()
   skip_if_offline(host = "r-project.org")
-  skip()
+  skip("this test meant only for verifying the progress messages using larger files")
 
   delete_test_download_folder()
   expect_success({
