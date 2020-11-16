@@ -12,11 +12,6 @@ test_that("check_for_aws_env_vars returns false if credentials unset", {
   })
 })
 
-Sys.getenv("TEMP_SECRET")
-with_envvar(new = c("TEMP_SECRET" = "secret"), Sys.getenv("TEMP_SECRET"))
-Sys.getenv("TEMP_SECRET")
-
-
 test_that("s3_get downloads a private file", {
   skip_if_no_boto()
   skip_if_no_aws_credentials()

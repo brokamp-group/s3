@@ -34,7 +34,6 @@ If a file has already been downloaded or already exists, then it will not be re-
 
 ```
 
-
 Download multiple files with:
 
 ```r
@@ -82,8 +81,8 @@ The package uses [`reticulate`](https://rstudio.github.io/reticulate/) to expose
 
 ### Setting up AWS credentials
 
-AWS S3 uses credentials to allow access to non-public files. As with other AWS command line tools and R packages, you can use the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to gain access to such files. 
+You *must have AWS S3 credentials set* to gain access to both public and non-public files. As with other AWS command line tools and R packages, you can use the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to gain access to such files. 
 
 It is highly recommended to setup your environment variables outside of your R script to avoid including sensitive information within your R script. This can be done by exporting environment variables before starting R (see [AWS CLI documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) on this) or by defining them in a `.Renviron` file (see `?.Renviron` within `R`).
 
-You can use the helper function `check_for_aws_env_vars()` to check if your AWS key environment variables are set.
+You can use the internal helper function `check_for_aws_env_vars()` to check if your AWS key environment variables are set.
