@@ -5,10 +5,11 @@
 #' @param download_folder location to download S3 objects
 #' @param quiet suppress individual download messages from s3_get?
 #' @param force force download to overwrite existing S3 objects
+#' @param confirm ask user to interactively confirm downloads?
 #' @return file paths to downloaded files (invisibly)
 #' @examples
 #' s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
-#'                "s3:geomarker/testing_downloads/mtcars.fst"))
+#'                "s3://geomarker/testing_downloads/mtcars.fst"))
 #' @details 
 #' Progress messages for downloading several S3 objects cannot be silenced.
 #' 
@@ -32,9 +33,7 @@ s3_get_files <- function(s3_uri,
 
     stop_if_no_boto()
 
-    files_size <-
-        purrr::map(s3_uri, s3_file_size) %>%
-        purrr::reduce(`+`)
+    files_size <- Reduce(f = `+`, x = lapply(s3_uri, s3_file_size))
 
     cli::cli_alert_info("{n_files} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {download_folder} ")
     if (confirm) ui_confirm()

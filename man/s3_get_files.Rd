@@ -20,6 +20,8 @@ s3_get_files(
 \item{quiet}{suppress individual download messages from s3_get?}
 
 \item{force}{force download to overwrite existing S3 objects}
+
+\item{confirm}{ask user to interactively confirm downloads?}
 }
 \value{
 file paths to downloaded files (invisibly)
@@ -37,5 +39,5 @@ Invisibly returning the S3 object file path allows for further usage of file wit
 }
 \examples{
 s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
-               "s3:geomarker/testing_downloads/mtcars.fst"))
+               "s3://geomarker/testing_downloads/mtcars.fst"))
 }
