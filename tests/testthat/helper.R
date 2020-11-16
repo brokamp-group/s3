@@ -1,7 +1,11 @@
 skip_if_no_boto <- function() {
   have_boto <- reticulate::py_module_available("boto3")
-  if (!have_boto)
-    skip("boto not available for testing")
+  if (!have_boto) skip("boto not available for testing")
+}
+
+skip_if_no_aws_credentials <- function() {
+  have_aws_credentials <- check_for_aws_env_vars()
+  if (!have_aws_credentials) skip("aws credentials not available for testing")
 }
 
 delete_test_download_folder <- function() {

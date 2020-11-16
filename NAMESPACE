@@ -2,4 +2,5 @@
 
 export("%>%")
 export(s3_get)
+export(s3_get_files)
 importFrom(magrittr,"%>%")

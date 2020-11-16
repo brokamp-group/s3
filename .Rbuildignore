@@ -1,2 +1,5 @@
 ^LICENSE\.md$
 ^\.github$
+^.Rproj$
+backup_s3_code.R
+^s3_downloads$

@@ -1,9 +1,25 @@
-test_that("check_for_aws_env_vars succeeds", {
-  check_for_aws_env_vars()
+test_that("check_for_aws_env_vars returns true if credentials set", {
+  skip_if_no_aws_credentials()
+  expect_true(check_for_aws_env_vars())
 })
+
+test_that("check_for_aws_env_vars returns false if credentials unset", {
+  withr::with_envvar(new = c(
+    "AWS_ACCESS_KEY_ID" = NA,
+    "AWS_SECRET_ACCESS_KEY" = NA
+  ), {
+    expect_false(check_for_aws_env_vars())
+  })
+})
+
+Sys.getenv("TEMP_SECRET")
+with_envvar(new = c("TEMP_SECRET" = "secret"), Sys.getenv("TEMP_SECRET"))
+Sys.getenv("TEMP_SECRET")
+
 
 test_that("s3_get downloads a private file", {
   skip_if_no_boto()
+  skip_if_no_aws_credentials()
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()
 

@@ -20,6 +20,7 @@ Imports:
     prettyunits,
     fs
 Suggests: 
-    testthat
+    testthat,
+    withr
 URL: https://github.com/geomarker-io/s3
 BugReports: https://github.com/geomarker-io/s3/issues
