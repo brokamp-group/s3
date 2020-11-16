@@ -8,8 +8,10 @@
 #' @param confirm ask user to interactively confirm downloads?
 #' @return file paths to downloaded files (invisibly)
 #' @examples
+#' \dontrun{
 #' s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
 #'                "s3://geomarker/testing_downloads/mtcars.fst"))
+#' }
 #' @details 
 #' Progress messages for downloading several S3 objects cannot be silenced.
 #' 

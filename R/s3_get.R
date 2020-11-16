@@ -7,9 +7,11 @@
 #' @param force force download to overwrite existing S3 object
 #' @return file path to downloaded file (invisibly)
 #' @examples
+#' \dontrun{
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds")
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
 #'     readRDS()
+#' }
 #' @details 
 #' s3_get will politely refuse to download an S3 object if it already exists within the download_folder.
 #' 
