@@ -38,6 +38,8 @@ Invisibly returning the S3 object file path allows for further usage of file wit
 (See example)
 }
 \examples{
+\dontrun{
 s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
                "s3://geomarker/testing_downloads/mtcars.fst"))
+}
 }
