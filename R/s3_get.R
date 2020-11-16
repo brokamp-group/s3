@@ -6,6 +6,8 @@
 #' @param quiet suppress messages?
 #' @param force force download to overwrite existing S3 object
 #' @return file path to downloaded file (invisibly)
+#' @importFrom prettyunits pretty_bytes
+#' @importFrom prettyunits pretty_sec
 #' @examples
 #' \dontrun{
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds")
