@@ -2,8 +2,8 @@
 boto <- NULL
 
 .onLoad <- function(libname, pkgname) {
+  stop_if_no_boto()
   boto <<- reticulate::import("boto3", delay_load = TRUE)
-  # boto <<- reticulate::import("boto3", delay_load = TRUE)
 }
 
 # call this in functions before using boto for informative error messages
