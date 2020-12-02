@@ -23,18 +23,21 @@ test_that("s3_get does not downloads a file if it already exists ", {
   delete_test_download_folder()
 })
 
-test_that("s3_get_files downloads all files (forcing no user confirmation)", {
+test_that("s3_get_files downloads files", {
   skip_if_no_boto()
   skip_if_no_aws_credentials()
   skip_if_offline(host = "r-project.org")
-  skip("why no expectation?")
+  # skip("why no expectation?")
   delete_test_download_folder()
-  expect_success({
-    s3_get_files(s3_uri = c(
-      "s3://geomarker/testing_downloads/mtcars.rds",
-      "s3://geomarker/testing_downloads/mtcars.fst"
-    ), confirm = FALSE)
-  })
+  expect_identical({
+      dl_results <- s3_get_files(c(
+        "s3://geomarker/testing_downloads/mtcars.rds",
+        "s3://geomarker/testing_downloads/mtcars_again.rds"
+      ), confirm = FALSE)
+      lapply(dl_results$file_path, readRDS)
+    },
+    list(mtcars, mtcars)
+  )
   delete_test_download_folder()
 })
 

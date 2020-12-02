@@ -18,7 +18,8 @@ Imports:
     reticulate,
     magrittr,
     prettyunits,
-    fs
+    fs,
+    tibble
 Suggests: 
     testthat,
     withr

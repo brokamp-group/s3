@@ -24,22 +24,25 @@ s3_get_files(
 \item{confirm}{ask user to interactively confirm downloads?}
 }
 \value{
-file paths to downloaded files (invisibly)
+tibble with s3_uris and corresponding file paths to downloaded files (invisibly)
 }
 \description{
 download several s3 files
 }
 \details{
-Progress messages for downloading several S3 objects cannot be silenced.
+Progress messages for downloading several S3 objects at once cannot be silenced.
 
 Like s3_get, S3 objects that already exists within the download_folder will not be re downloaded
 
-Invisibly returning the S3 object file path allows for further usage of file without hard coding.
+Invisibly returning the S3 object file paths allows for further usage of files without hard coding.
 (See example)
 }
 \examples{
 \dontrun{
 s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
                "s3://geomarker/testing_downloads/mtcars.fst"))
+dl_results <- s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
+                             "s3://geomarker/testing_downloads/mtcars_again.rds"))
+lapply(dl_results$file_path, readRDS)
 }
 }
