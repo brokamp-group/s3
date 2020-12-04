@@ -39,10 +39,21 @@ Invisibly returning the S3 object file paths allows for further usage of files w
 }
 \examples{
 \dontrun{
-s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
-               "s3://geomarker/testing_downloads/mtcars.fst"))
-dl_results <- s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
-                             "s3://geomarker/testing_downloads/mtcars_again.rds"))
+s3_get_files(c(
+    "s3://geomarker/testing_downloads/mtcars.rds",
+    "s3://geomarker/testing_downloads/mtcars.fst"
+))
+
+dl_results <- s3_get_files(c(
+    "s3://geomarker/testing_downloads/mtcars.rds",
+    "s3://geomarker/testing_downloads/mtcars_again.rds"
+))
 lapply(dl_results$file_path, readRDS)
+
+# download some larger files
+s3_get_files(s3_uri = c(
+    "s3://geomarker/testing_downloads/zctas_2000_contig_us_5072.rds",
+    "s3://geomarker/testing_downloads/county_fips_contig_us_5072.rds"
+))
 }
 }

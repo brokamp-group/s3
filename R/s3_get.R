@@ -50,12 +50,23 @@ s3_get <- function(s3_uri,
         ))
     }
 
+    has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
 
-    boto$client("s3")$download_file(
-        Bucket = parsed_uri$bucket,
-        Key = parsed_uri$key,
-        Filename = dest_file
-    )
+    if (has_aws_env_vars) {
+        boto$client("s3")$download_file(
+            Bucket = parsed_uri$bucket,
+            Key = parsed_uri$key,
+            Filename = dest_file
+        )
+    }
+
+    if (!has_aws_env_vars) {
+        boto$resource("s3")$Bucket(parsed_uri$bucket)$download_file(
+            Key = parsed_uri$key,
+            Filename = dest_file
+        )
+    }
+
 
     return(invisible(dest_file))
 }

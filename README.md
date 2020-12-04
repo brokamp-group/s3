@@ -9,7 +9,7 @@
 
 ## Usage
 
-This R package can download files hosted on AWS S3 to a local directory based on their URI. It will avoid downloading files that are already present and also allows for customization of where to store downloaded files.
+This R package can download public and private files hosted on AWS S3 to a local directory based on their URI. It will avoid downloading files that are already present and also allows for customization of where to store downloaded files.
 
 ### Identifying files with a URI
 
@@ -49,6 +49,8 @@ s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
     readRDS()
 ```
 
+This means that `s3` is not just for downloading objects. Since `s3_get` and `s3_get_files` will not download files that already exist and always return paths to these files, code utilizing these functions can be kept in R scripts designed to read in objects everytime they are run.
+
 ### Customizing download location
 
 By default, files downloaded from S3 will be stored in a folder called `s3_downloads` located within the current working directory. This can be changed when downloading files by using the `download_folder` argument:
@@ -81,7 +83,7 @@ The package uses [`reticulate`](https://rstudio.github.io/reticulate/) to expose
 
 ### Setting up AWS credentials
 
-You *must have AWS S3 credentials set* to gain access to both public and non-public files. As with other AWS command line tools and R packages, you can use the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to gain access to such files. 
+You must have the appropriate AWS S3 credentials set to gain access to non-public files. As with other AWS command line tools and R packages, you can use the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to gain access to such files. 
 
 It is highly recommended to setup your environment variables outside of your R script to avoid including sensitive information within your R script. This can be done by exporting environment variables before starting R (see [AWS CLI documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) on this) or by defining them in a `.Renviron` file (see `?.Renviron` within `R`).
 
