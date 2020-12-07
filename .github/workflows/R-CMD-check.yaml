@@ -66,14 +66,14 @@ jobs:
 
       - name: Install dependencies
         run: |
--          install.packages("reticulate")
--          reticulate::install_miniconda()
--          miniconda_global_cache <- "/usr/local/miniconda/"
--          if (dir.exists(miniconda_global_cache)) {
--            unlink(miniconda_global_cache, recursive = TRUE)
--          }
--          reticulate::py_install("boto3")
--          install.packages(c("remotes", "rcmdcheck"))
+         install.packages("reticulate")
+         reticulate::install_miniconda()
+         miniconda_global_cache <- "/usr/local/miniconda/"
+         if (dir.exists(miniconda_global_cache)) {
+           unlink(miniconda_global_cache, recursive = TRUE)
+         }
+         reticulate::py_install("boto3")
+         install.packages(c("remotes", "rcmdcheck"))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
