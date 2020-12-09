@@ -10,7 +10,7 @@ s3_file_size <- function(s3_uri) {
         head_object <-
             boto$client("s3")$head_object(
                 Bucket = parsed_uri$bucket,
-                Key <- parsed_uri$key
+                Key = parsed_uri$key
             )
         file_size <- head_object$ContentLength
     }
