@@ -1,5 +1,6 @@
 # function that converts an s3 uri to the components needed
 s3_parse_uri <- function(s3_uri) {
+
     if (!grepl("^(s3://)", s3_uri)) {
         stop(s3_uri, " does not begin with s3://", call. = FALSE)
     }
@@ -11,10 +12,14 @@ s3_parse_uri <- function(s3_uri) {
         file_path_parts[3:(length(file_path_parts) - 1)] %>%
         fs::path_join() %>%
         as.character()
+
     if (length(file_path_parts) == 3) folder <- NULL # if file is in root of bucket (no folder)
+
     key <-
         fs::path_join(c(folder, file_name)) %>%
         as.character()
+
+    s3_url <- glue::glue("https://{bucket}.s3.amazonaws.com/{key}")
 
     return(
         list(
@@ -22,7 +27,8 @@ s3_parse_uri <- function(s3_uri) {
             bucket = bucket,
             key = key,
             folder = folder,
-            file_name = file_name
+            file_name = file_name,
+            url = as.character(s3_url)
         )
     )
 }
