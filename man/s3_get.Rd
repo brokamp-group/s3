@@ -8,6 +8,7 @@ s3_get(
   s3_uri,
   download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
   quiet = FALSE,
+  progress = FALSE,
   force = FALSE
 )
 }
@@ -17,6 +18,8 @@ s3_get(
 \item{download_folder}{location to download S3 object}
 
 \item{quiet}{suppress messages?}
+
+\item{progress}{show download progress? (currently only for public objects)}
 
 \item{force}{force download to overwrite existing S3 object}
 }
@@ -34,7 +37,7 @@ Invisibly returning the S3 object file path allows for further usage of file wit
 }
 \examples{
 \dontrun{
-s3_get("s3://geomarker/testing_downloads/mtcars.rds")
+s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") \%>\%
     readRDS()
 }

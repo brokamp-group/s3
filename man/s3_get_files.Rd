@@ -7,7 +7,7 @@
 s3_get_files(
   s3_uri,
   download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
-  quiet = TRUE,
+  progress = FALSE,
   force = FALSE,
   confirm = TRUE
 )
@@ -17,7 +17,7 @@ s3_get_files(
 
 \item{download_folder}{location to download S3 objects}
 
-\item{quiet}{suppress individual download messages from s3_get?}
+\item{progress}{show download progress for each individual file? (currently only for public objects)}
 
 \item{force}{force download to overwrite existing S3 objects}
 
