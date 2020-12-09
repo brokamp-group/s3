@@ -3,7 +3,7 @@
 #' @export
 #' @param s3_uri vector of S3 object URIs
 #' @param download_folder location to download S3 objects
-#' @param quiet suppress individual download messages from s3_get?
+#' @param progress show download progress for each individual file? (currently only for public objects)
 #' @param force force download to overwrite existing S3 objects
 #' @param confirm ask user to interactively confirm downloads?
 #' @return tibble with s3_uris and corresponding file paths to downloaded files (invisibly)
@@ -39,7 +39,7 @@
 
 s3_get_files <- function(s3_uri,
                          download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
-                         quiet = TRUE,
+                         progress = FALSE,
                          force = FALSE,
                          confirm = TRUE) {
 
@@ -71,7 +71,7 @@ s3_get_files <- function(s3_uri,
     }
 
     download_time <- system.time({
-        out$file_path <- download_files_with_progress(quiet = quiet, force = force)
+        out$file_path <- download_files_with_progress(download_folder = download_folder, quiet = TRUE, force = force, progress = progress)
     })["elapsed"]
 
     cli::cli_alert_success("Downloaded {n_files} file{?s} in {prettyunits::pretty_sec(download_time)}.")

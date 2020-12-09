@@ -1,6 +1,5 @@
 test_that("s3_get downloads a public file without aws credentials", {
   skip_if_no_boto()
-  skip_if_no_aws_credentials()
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()
   withr::with_envvar(new = c(

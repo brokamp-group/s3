@@ -75,11 +75,13 @@ Currently, the package is only available on GitHub. Install inside `R` with:
 remotes::install_github("geomarker-io/s3")
 ```
 
-### `boto3` python module
+No further configuration is necessary, *but* if you would like to download private files from S3, you will need to install the `boto3` python module.
+
+### `boto3` python module installation
 
 The package uses [`reticulate`](https://rstudio.github.io/reticulate/) to expose functions from the [`boto3`](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) python module.  This allows us to take advantage of its concurrent transfer operations using threads, but requires the module to be installed.
 
- Although the package can be installed and loaded without the `boto3` python module, its core functionality will not be available without it. In this case, you will be advised to install it from within `R` by calling `reticulate::py_install("boto3")`, which will automatically install it within a virtualenv or Conda environment named `r-reticulate`. Additionally, if your system does not have a compatible version of python, you will be asked to install [`miniconda`](https://docs.conda.io/en/latest/miniconda.html) from within `R`.
+ Although the package can be installed, loaded, and used to download public files on S3  without the `boto3` python module, private files will not be able to be downloaded without it. If `boto3` is unavailable and an attempt to download a private S3 file is made, you will be advised to install it from within `R` by calling `reticulate::py_install("boto3")`, which will automatically install it within a virtualenv or Conda environment named `r-reticulate`. Additionally, if your system does not have a compatible version of python, you will be asked to install [`miniconda`](https://docs.conda.io/en/latest/miniconda.html) from within `R`.
 
 ### Setting up AWS credentials
 
@@ -87,4 +89,4 @@ You must have the appropriate AWS S3 credentials set to gain access to non-publi
 
 It is highly recommended to setup your environment variables outside of your R script to avoid including sensitive information within your R script. This can be done by exporting environment variables before starting R (see [AWS CLI documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) on this) or by defining them in a `.Renviron` file (see `?.Renviron` within `R`).
 
-You can use the internal helper function `check_for_aws_env_vars()` to check if your AWS key environment variables are set.
+You can use the internal helper function `s3:::check_for_aws_env_vars()` to check if your AWS key environment variables are set.

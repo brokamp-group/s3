@@ -5,7 +5,6 @@ boto <- NULL
   boto <<- reticulate::import("boto3", delay_load = TRUE)
 }
 
-# call this in functions before using boto for informative error messages
 stop_if_no_boto <- function() {
   if (!reticulate::py_module_available("boto3")) {
     cli::cli_alert_danger("The boto3 python module is required for this functionality, but is not available")
@@ -13,7 +12,6 @@ stop_if_no_boto <- function() {
     stop(call. = FALSE)
   }
 }
-
 
 ui_confirm <- function() {
     if (!interactive()) {

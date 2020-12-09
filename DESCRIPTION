@@ -19,7 +19,9 @@ Imports:
     magrittr,
     prettyunits,
     fs,
-    tibble
+    tibble,
+    httr,
+    glue
 Suggests: 
     testthat,
     withr

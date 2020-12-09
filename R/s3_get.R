@@ -5,12 +5,13 @@
 #' @param download_folder location to download S3 object
 #' @param quiet suppress messages?
 #' @param force force download to overwrite existing S3 object
+#' @param progress show download progress? (currently only for public objects)
 #' @return file path to downloaded file (invisibly)
 #' @importFrom prettyunits pretty_bytes
 #' @importFrom prettyunits pretty_sec
 #' @examples
 #' \dontrun{
-#' s3_get("s3://geomarker/testing_downloads/mtcars.rds")
+#' s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
 #'     readRDS()
 #' }
@@ -23,8 +24,16 @@
 s3_get <- function(s3_uri,
                    download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
                    quiet = FALSE,
+                   progress = FALSE,
                    force = FALSE) {
+
     parsed_uri <- s3_parse_uri(s3_uri)
+
+    if (progress) {
+        progress <- httr::progress()
+    } else {
+        progress <- NULL
+    }
 
     dest_folder <-
         fs::path_join(c(
@@ -41,8 +50,6 @@ s3_get <- function(s3_uri,
         return(invisible(dest_file))
     }
 
-    stop_if_no_boto()
-
     if (!quiet) {
         cli::cli_alert_info(c(
             "{.file {s3_uri}} is {.strong {prettyunits::pretty_bytes(s3_file_size(s3_uri))}}",
@@ -53,6 +60,7 @@ s3_get <- function(s3_uri,
     has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
 
     if (has_aws_env_vars) {
+    stop_if_no_boto()
         boto$client("s3")$download_file(
             Bucket = parsed_uri$bucket,
             Key = parsed_uri$key,
@@ -61,12 +69,13 @@ s3_get <- function(s3_uri,
     }
 
     if (!has_aws_env_vars) {
-        boto$resource("s3")$Bucket(parsed_uri$bucket)$download_file(
-            Key = parsed_uri$key,
-            Filename = dest_file
+        s3_response <- httr::HEAD(parsed_uri$url)
+        gets <- httr::GET(
+            parsed_uri$url,
+            httr::write_disk(dest_file, overwrite = TRUE),
+            progress
         )
     }
-
 
     return(invisible(dest_file))
 }
