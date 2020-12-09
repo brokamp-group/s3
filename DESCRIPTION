@@ -1,5 +1,5 @@
 Package: s3
-Title: Download Files From AWS S3
+Title: Download Files from AWS S3
 Version: 0.2
 Authors@R: 
     person(given = "Cole",
