@@ -3,3 +3,4 @@
 ^.Rproj$
 backup_s3_code.R
 ^s3_downloads$
+^Dockerfile$
