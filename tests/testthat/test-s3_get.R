@@ -1,5 +1,4 @@
 test_that("s3_get downloads a public file without aws credentials", {
-  skip_if_no_boto()
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()
   withr::with_envvar(new = c(
@@ -26,8 +25,7 @@ test_that("s3_get downloads a private file", {
   delete_test_download_folder()
 })
 
-test_that("s3_get does not downloads a file if it already exists ", {
-  skip_if_no_boto()
+test_that("s3_get does not download a file if it already exists ", {
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()
   s3_get("s3://geomarker/testing_downloads/mtcars.rds")
@@ -39,7 +37,6 @@ test_that("s3_get does not downloads a file if it already exists ", {
 })
 
 test_that("s3_get_files downloads public files without aws credentials", {
-  skip_if_no_boto()
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()
   withr::with_envvar(new = c(
