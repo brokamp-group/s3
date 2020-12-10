@@ -21,7 +21,7 @@ s3_get_files(
 
 \item{force}{force download to overwrite existing S3 objects}
 
-\item{confirm}{ask user to interactively confirm downloads?}
+\item{confirm}{ask user to interactively confirm downloads? (only possible when session is interactive)}
 }
 \value{
 tibble with s3_uris and corresponding file paths to downloaded files (invisibly)

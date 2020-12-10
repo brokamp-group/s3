@@ -5,7 +5,7 @@
 #' @param download_folder location to download S3 objects
 #' @param progress show download progress for each individual file? (currently only for public objects)
 #' @param force force download to overwrite existing S3 objects
-#' @param confirm ask user to interactively confirm downloads?
+#' @param confirm ask user to interactively confirm downloads? (only possible when session is interactive)
 #' @return tibble with s3_uris and corresponding file paths to downloaded files (invisibly)
 #' @examples
 #' \dontrun{
@@ -50,7 +50,7 @@ s3_get_files <- function(s3_uri,
     files_size <- Reduce(f = `+`, x = lapply(s3_uri, s3_file_size))
 
     cli::cli_alert_info("{n_files} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {download_folder} ")
-    if (confirm) ui_confirm()
+    if (interactive() & confirm) ui_confirm()
 
     download_files_with_progress <- function(...) {
         sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_files} files.")
