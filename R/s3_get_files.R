@@ -45,8 +45,6 @@ s3_get_files <- function(s3_uri,
 
     n_files <- length(s3_uri)
 
-    stop_if_no_boto()
-
     out <- tibble::tibble(s3_uri = s3_uri)
 
     files_size <- Reduce(f = `+`, x = lapply(s3_uri, s3_file_size))
