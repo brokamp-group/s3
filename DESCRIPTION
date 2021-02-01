@@ -21,7 +21,8 @@ Imports:
     fs,
     tibble,
     httr,
-    glue
+    glue,
+    purrr (>= 0.3.4)
 Suggests: 
     testthat,
     withr
