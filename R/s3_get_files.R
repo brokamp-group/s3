@@ -34,9 +34,6 @@
 #' Invisibly returning the S3 object file paths allows for further usage of files without hard coding.
 #' (See example)
 
-
-# TODO: add in checking for each file up front, so we can report an accurate total download size only actually for the files that will be downloaded
-
 s3_get_files <- function(s3_uri,
                          download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
                          progress = FALSE,
@@ -54,20 +51,40 @@ s3_get_files <- function(s3_uri,
     out$dest_file <- purrr::map2_chr(out$dest_folder,
                                      out$parsed_uri,
                                      ~ fs::path_join(c(.x, .y$file_name)))
-    out$exists_already <- ifelse(fs::file_exists(out$dest_file), TRUE, FALSE)
+    out$s3_check_result <- purrr::map2_chr(out$dest_file,
+                                       out$parsed_uri,
+                                       s3_check_file)
 
     # if file exists in download_folder, alert user and do not download again
-    exists_already <- out[out$exists_already,]
+    exists_already <- out[out$s3_check_result == 'already exists',]
     n_exists_already <- nrow(exists_already)
 
     if (n_exists_already > 0 & !force) {
-            cli::cli_alert_info("{n_exists_already} file{?s} already exist in {download_folder}")
-            print(out[out$exists_already, 'dest_file'])
+        exists_already$file_path <- exists_already$dest_file
+        cli::cli_alert_info("{n_exists_already} file{?s} already exist in {download_folder}")
+        print(exists_already[, 'dest_file'])
     }
 
-    # if file does not exist in download_folder, download now
-    need_to_download <- out[!out$exists_already,]
+    # if user does not have access or file does not exist, remove from files to be downloaded
+    no_access <- out[out$s3_check_result == 'access denied',]
+    n_no_access <- nrow(no_access)
+
+    if (n_no_access > 0) {
+        cli::cli_alert_danger("You do not have access to {n_no_access} file{?s} or they do not exist.
+                              These files will not be downloaded.")
+        print(no_access[, 'dest_file'])
+    }
+
+    # if file does not exist in download_folder and user has access, download now
+    need_to_download <- out[out$s3_check_result == 'proceed',]
     n_files <- nrow(need_to_download)
+
+    if (n_files < 1) {
+        cli::cli_alert_warning('no files were downloaded')
+       if (n_exists_already > 0) return(invisible(exists_already[,c('s3_uri', 'file_path')]))
+        else return()
+    }
+
     files_size <- Reduce(f = `+`, x = lapply(need_to_download$s3_uri, s3_file_size))
 
     cli::cli_alert_info("{n_files} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {download_folder} ")
@@ -97,8 +114,6 @@ s3_get_files <- function(s3_uri,
     cli::cli_alert_success("Downloaded {n_files} file{?s} in {prettyunits::pretty_sec(download_time)}.")
 
     # return all file paths (for files that already existed and those that were downloaded)
-    exists_already$file_path <- exists_already$dest_file
-
     out <- rbind(exists_already, need_to_download)[,c('s3_uri', 'file_path')]
     out$file_path <- unlist(out$file_path)
 

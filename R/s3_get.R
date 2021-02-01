@@ -1,5 +1,5 @@
 #' download s3 file
-#' 
+#'
 #' @export
 #' @param s3_uri URI for an S3 object
 #' @param download_folder location to download S3 object
@@ -15,9 +15,9 @@
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
 #'     readRDS()
 #' }
-#' @details 
+#' @details
 #' s3_get will politely refuse to download an S3 object if it already exists within the download_folder.
-#' 
+#'
 #' Invisibly returning the S3 object file path allows for further usage of file without hard coding.
 #' (See example)
 
@@ -45,9 +45,16 @@ s3_get <- function(s3_uri,
 
     dest_file <- fs::path_join(c(dest_folder, parsed_uri$file_name))
 
-    if (fs::file_exists(dest_file) & !force) {
+    s3_check_result <- s3_check_file(dest_file, parsed_uri)
+
+    if (s3_check_result == 'already exists' & !force) {
         if (!quiet) cli::cli_alert_info("{.file {s3_uri}} already exists at {.file {dest_file}}")
         return(invisible(dest_file))
+    }
+
+    if (s3_check_result == 'access denied') {
+        cli::cli_alert_warning('You do not have access to {.file {s3_uri}} or it does not exist')
+        stop()
     }
 
     if (!quiet) {
@@ -69,7 +76,6 @@ s3_get <- function(s3_uri,
     }
 
     if (!has_aws_env_vars) {
-        s3_response <- httr::HEAD(parsed_uri$url)
         gets <- httr::GET(
             parsed_uri$url,
             httr::write_disk(dest_file, overwrite = TRUE),
