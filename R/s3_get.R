@@ -45,7 +45,8 @@ s3_get <- function(s3_uri,
 
     dest_file <- fs::path_join(c(dest_folder, parsed_uri$file_name))
 
-    s3_check_result <- s3_check_file(dest_file, parsed_uri)
+    has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
+    s3_check_result <- s3_check_file(dest_file, parsed_uri, has_aws_env_vars)
 
     if (s3_check_result == 'already exists' & !force) {
         if (!quiet) cli::cli_alert_info("{.file {s3_uri}} already exists at {.file {dest_file}}")
@@ -63,8 +64,6 @@ s3_get <- function(s3_uri,
             "; downloading to {.file {dest_file}}"
         ))
     }
-
-    has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
 
     if (has_aws_env_vars) {
     stop_if_no_boto()

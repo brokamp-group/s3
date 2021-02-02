@@ -53,7 +53,8 @@ s3_get_files <- function(s3_uri,
                                      ~ fs::path_join(c(.x, .y$file_name)))
     out$s3_check_result <- purrr::map2_chr(out$dest_file,
                                        out$parsed_uri,
-                                       s3_check_file)
+                                       ~s3_check_file(.x, .y,
+                                                      has_aws_env_vars = suppressMessages(check_for_aws_env_vars())))
 
     # if file exists in download_folder, alert user and do not download again
     exists_already <- out[out$s3_check_result == 'already exists',]
@@ -62,7 +63,7 @@ s3_get_files <- function(s3_uri,
     if (n_exists_already > 0 & !force) {
         exists_already$file_path <- exists_already$dest_file
         cli::cli_alert_info("{n_exists_already} file{?s} already exist in {download_folder}")
-        print(exists_already[, 'dest_file'])
+        print(exists_already$dest_file)
     }
 
     # if user does not have access or file does not exist, remove from files to be downloaded
@@ -72,7 +73,7 @@ s3_get_files <- function(s3_uri,
     if (n_no_access > 0) {
         cli::cli_alert_danger("You do not have access to {n_no_access} file{?s} or they do not exist.
                               These files will not be downloaded.")
-        print(no_access[, 'dest_file'])
+        print(no_access$dest_file)
     }
 
     # if file does not exist in download_folder and user has access, download now
