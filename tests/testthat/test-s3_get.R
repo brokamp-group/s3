@@ -98,12 +98,12 @@ test_that("s3_get_files correctly handles files that already exist, are private,
     expect_identical(
      s3_get_files(c("s3://geomarker/testing_downloads/mtcars.rds",
                      "s3://geomarker/testing_downloads/mtcars_again.rds",
-                     "s3://geomarker/testing_downloads/mtcars_private.rds")),
+                    "s3://geomarker/testing_downloads/mtcars_private.rds"),
+                  confirm = FALSE),
       tibble::tibble(s3_uri = c('s3://geomarker/testing_downloads/mtcars.rds',
                                 's3://geomarker/testing_downloads/mtcars_again.rds'),
                      file_path = c(fs::path_wd('/s3_downloads/geomarker/testing_downloads/mtcars.rds'),
                                    fs::path_wd('/s3_downloads//geomarker/testing_downloads/mtcars_again.rds')))
-
     )
   })
   delete_test_download_folder()
