@@ -27,60 +27,47 @@ s3_get <- function(s3_uri,
                    progress = FALSE,
                    force = FALSE) {
 
-    parsed_uri <- s3_parse_uri(s3_uri)
+  parsed_uri <- s3_parse_uri(s3_uri)
+  dest_file <-
+    fs::path_join(c(
+      download_folder,
+      parsed_uri$bucket,
+      parsed_uri$folder,
+      parsed_uri$file_name
+    ))
 
-    if (progress) {
-        progress <- httr::progress()
-    } else {
-        progress <- NULL
-    }
+  if (!force & s3_check_for_file_local(s3_uri, download_folder, quiet = quiet)) {
+    return(invisible(dest_file))
+  }
 
-    dest_folder <-
-        fs::path_join(c(
-            download_folder,
-            parsed_uri$bucket,
-            parsed_uri$folder
-        ))
-    fs::dir_create(dest_folder)
+  s3_check_for_file_s3(s3_uri, download_folder)
+  
+  fs::dir_create(fs::path_dir(dest_file))
 
-    dest_file <- fs::path_join(c(dest_folder, parsed_uri$file_name))
+  has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
 
-    has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
-    s3_check_result <- s3_check_file(dest_file, parsed_uri, has_aws_env_vars)
-
-    if (s3_check_result == 'already exists' & !force) {
-        if (!quiet) cli::cli_alert_info("{.file {s3_uri}} already exists at {.file {dest_file}}")
-        return(invisible(dest_file))
-    }
-
-    if (s3_check_result == 'access denied') {
-        cli::cli_alert_warning('You do not have access to {.file {s3_uri}} or it does not exist')
-        stop()
-    }
-
-    if (!quiet) {
-        cli::cli_alert_info(c(
-            "{.file {s3_uri}} is {.strong {prettyunits::pretty_bytes(s3_file_size(s3_uri))}}",
-            "; downloading to {.file {dest_file}}"
-        ))
-    }
-
-    if (has_aws_env_vars) {
+  if (has_aws_env_vars) {
     stop_if_no_boto()
-        boto$client("s3")$download_file(
-            Bucket = parsed_uri$bucket,
-            Key = parsed_uri$key,
-            Filename = dest_file
-        )
-    }
+    boto$client("s3")$download_file(
+      Bucket = parsed_uri$bucket,
+      Key = parsed_uri$key,
+      Filename = dest_file
+    )
+  }
 
-    if (!has_aws_env_vars) {
-        gets <- httr::GET(
-            parsed_uri$url,
-            httr::write_disk(dest_file, overwrite = TRUE),
-            progress
-        )
-    }
+  if (progress) {
+    progress <- httr::progress()
+  } else {
+    progress <- NULL
+  }
+
+  if (!has_aws_env_vars) {
+    gets <- httr::GET(
+      parsed_uri$url,
+      httr::write_disk(dest_file, overwrite = TRUE),
+      progress
+    )
+  }
 
     return(invisible(dest_file))
 }
