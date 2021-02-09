@@ -27,7 +27,7 @@ Identifier](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier),
 which is a federated and extensible naming system. In practice, this
 means that a URI is a character string that can uniquely identify a
 particular resource. An example of a commonly used URI scheme is `https`
-for identifying web resources, e.g. `https://r-project.org`.
+for identifying web resources, e.g. `https://r-project.org`.
 
 Here, we use the `s3` scheme as defined by AWS. For example, the URI for
 a file hosted on S3 called `mtcars.rds` in a bucket called `geomarker`
@@ -42,7 +42,6 @@ Download a single file with:
 ``` r
 library(s3)
 s3_get("s3://geomarker/testing_downloads/mtcars.rds")
-#> ℹ s3://geomarker/testing_downloads/mtcars.rds is 1.23 kB; downloading to /Users/RASV5G/OneDrive - cchmc/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds
 ```
 
 If a file has already been downloaded or already exists, then it will
@@ -50,7 +49,7 @@ not be re-downloaded:
 
 ``` r
 s3_get("s3://geomarker/testing_downloads/mtcars.rds")
-#> ℹ s3://geomarker/testing_downloads/mtcars.rds already exists at /Users/RASV5G/OneDrive - cchmc/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds
+#> [36mℹ[39m s3://geomarker/testing_downloads/mtcars.rds already exists at /Users/cole/code/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds
 ```
 
 Download multiple files with:
@@ -59,12 +58,11 @@ Download multiple files with:
 s3_get_files(c(
           "s3://geomarker/testing_downloads/mtcars.rds",
           "s3://geomarker/testing_downloads/mtcars_again.rds"
-        ))
-#> ℹ 2 files totaling 2.45 kB will be downloaded to /Users/RASV5G/OneDrive - cchmc/s3/s3_downloads
-#> → Downloading 2 files.
-#> → Got 0 files, downloading 2
-#> → Got 1 file, downloading 1
-#> ✓ Downloaded 2 files in 134ms.
+        ),
+    confirm = FALSE)
+#> [36mℹ[39m 1 file already exist
+#> [36mℹ[39m 1 file totaling 1.23 kB will be downloaded to /Users/cole/code/s3/s3_downloads
+#> → Downloading 1 files.→ Got 0 files, downloading 1                            [32m✔[39m Downloaded 1 file in 123ms.
 ```
 
 ## Downloaded file paths
@@ -80,7 +78,7 @@ S3 file without changing their source code:
 ``` r
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
     readRDS()
-#> ℹ s3://geomarker/testing_downloads/mtcars.rds already exists at /Users/RASV5G/OneDrive - cchmc/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds
+#> [36mℹ[39m s3://geomarker/testing_downloads/mtcars.rds already exists at /Users/cole/code/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds
 #>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #> Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #> Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
@@ -103,12 +101,11 @@ in R scripts designed to read in objects everytime they are run.
 
 By default, files downloaded from S3 will be stored in a folder called
 `s3_downloads` located within the current working directory. This can be
-changed when downloading files by using the `download_folder`
-argument:
+changed when downloading files by using the `download_folder` argument:
 
 ``` r
-s3_get("s3://geomarker/testing_downloads/mtcars.rds", download_folder = fs::path_home('/Desktop/s3_downloads'))
-#> ℹ s3://geomarker/testing_downloads/mtcars.rds is 1.23 kB; downloading to /Users/RASV5G/Desktop/s3_downloads/geomarker/testing_downloads/mtcars.rds
+s3_get("s3://geomarker/testing_downloads/mtcars.rds", download_folder = fs::path_home('~/Desktop/s3_downloads'))
+#> [36mℹ[39m s3://geomarker/testing_downloads/mtcars.rds already exists at /Users/cole/~/Desktop/s3_downloads/geomarker/testing_downloads/mtcars.rds
 ```
 
 This can also be changed for the entire session by using the option

@@ -39,6 +39,13 @@ s3_get <- function(s3_uri,
   if (!force & s3_check_for_file_local(s3_uri, download_folder, quiet = quiet)) {
     return(invisible(dest_file))
   }
+  dest_file <-
+    fs::path_join(c(
+      download_folder,
+      parsed_uri$bucket,
+      parsed_uri$folder,
+      parsed_uri$file_name
+    ))
 
   s3_check_for_file_s3(s3_uri, download_folder)
   

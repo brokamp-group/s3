@@ -61,7 +61,8 @@ Download multiple files with:
 s3_get_files(c(
           "s3://geomarker/testing_downloads/mtcars.rds",
           "s3://geomarker/testing_downloads/mtcars_again.rds"
-        ))
+        ),
+	confirm = FALSE)
 ```
 
 
@@ -81,7 +82,7 @@ This means that `s3` is not just for downloading objects. Since `s3_get` and `s3
 By default, files downloaded from S3 will be stored in a folder called `s3_downloads` located within the current working directory. This can be changed when downloading files by using the `download_folder` argument:
 
 ```{r}
-s3_get("s3://geomarker/testing_downloads/mtcars.rds", download_folder = fs::path_home('/Desktop/s3_downloads'))
+s3_get("s3://geomarker/testing_downloads/mtcars.rds", download_folder = fs::path_home('~/Desktop/s3_downloads'))
 ```
 
 
@@ -119,6 +120,6 @@ You can use the internal helper function `s3:::check_for_aws_env_vars()` to chec
 
 ```{r, include = FALSE}
 fs::dir_delete(fs::path_wd('s3_downloads'))
-fs::dir_delete(fs::path_home('Desktop/s3_downloads'))
+fs::dir_delete(fs::path_home('~/Desktop/s3_downloads'))
 ```
 

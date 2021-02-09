@@ -34,74 +34,68 @@
 #' Invisibly returning the S3 object file paths allows for further usage of files without hard coding.
 #' (See example)
 
-s3_get_files <- function(s3_uri,
-                         download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
-                         progress = FALSE,
-                         force = FALSE,
-                         confirm = TRUE) {
+s3_get_files <-
+  function(s3_uri,
+           download_folder = getOption("s3.download_folder",
+                                       fs::path_wd("s3_downloads")),
+           progress = FALSE,
+           force = FALSE,
+           confirm = TRUE) {
 
-    out <- tibble::tibble(s3_uri = s3_uri)
+  out <-
+    purrr::map(s3_uri, s3_parse_uri) %>%
+    dplyr::bind_rows() %>%
+    dplyr::mutate(exists_already = purrr::map_lgl(uri,
+      s3_check_for_file_local,
+      download_folder = download_folder,
+      quiet = TRUE
+    ))
 
-    out$parsed_uri <- purrr::map(out$s3_uri, s3_parse_uri)
-    out$dest_folder <- purrr::map_chr(out$parsed_uri,
-                             ~ fs::path_join(c(
-                                 download_folder,
-                                 .x$bucket,
-                                 .x$folder)))
-    out$dest_file <- purrr::map2_chr(out$dest_folder,
-                                     out$parsed_uri,
-                                     ~ fs::path_join(c(.x, .y$file_name)))
-    out$s3_check_result <- purrr::map2_chr(out$dest_file,
-                                       out$parsed_uri,
-                                       ~s3_check_file(.x, .y,
-                                                      has_aws_env_vars = suppressMessages(check_for_aws_env_vars())))
+  out <-
+    out %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(
+      file_path =
+        fs::path_join(c(
+          download_folder,
+          bucket,
+          folder,
+          file_name
+        ))
+    )
 
-    # if file exists in download_folder, alert user and do not download again
-    exists_already <- out[out$s3_check_result == 'already exists',]
-    n_exists_already <- nrow(exists_already)
+    n_exist <- sum(out$exists_already)
+    n_to_dl <- sum(!out$exists_already)
 
-    if (n_exists_already > 0 & !force) {
-        exists_already$file_path <- exists_already$dest_file
-        cli::cli_alert_info("{n_exists_already} file{?s} already exist in {download_folder}")
-        print(exists_already$dest_file)
+    if (n_to_dl == 0 & !force) {
+      cli::cli_alert_info("all files already exist")
+      return(invisible(dplyr::select(out, uri, file_path)))
     }
 
-    # if user does not have access or file does not exist, remove from files to be downloaded
-    no_access <- out[out$s3_check_result == 'access denied',]
-    n_no_access <- nrow(no_access)
-
-    if (n_no_access > 0) {
-        cli::cli_alert_danger("You do not have access to {n_no_access} file{?s} or they do not exist.
-                              These files will not be downloaded.")
-        print(no_access$dest_file)
+    if (n_exist > 0 & !force) {
+      cli::cli_alert_info("{n_exist} file{?s} already exist")
     }
 
-    # if file does not exist in download_folder and user has access, download now
-    need_to_download <- out[out$s3_check_result == 'proceed',]
-    n_files <- nrow(need_to_download)
+    if (force) out$exists_already <- TRUE
 
-    if (n_files < 1) {
-        cli::cli_alert_warning('no files were downloaded')
-       if (n_exists_already > 0) return(invisible(exists_already[,c('s3_uri', 'file_path')]))
-        else return()
-    }
+    need_to_download <- dplyr::filter(out, !exists_already)
 
-    files_size <- Reduce(f = `+`, x = lapply(need_to_download$s3_uri, s3_file_size))
+    files_size <- Reduce(f = `+`, x = lapply(need_to_download$uri, s3_file_size))
 
-    cli::cli_alert_info("{n_files} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {download_folder} ")
+    cli::cli_alert_info("{n_to_dl} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {download_folder} ")
     if (interactive() & confirm) ui_confirm()
 
     download_files_with_progress <- function(...) {
-        sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_files} files.")
+        sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_to_dl} files.")
 
-        file_paths <- vector("list", length = n_files)
+        file_paths <- vector("list", length = n_to_dl)
 
-        for (i in n_files:1) {
+        for (i in n_to_dl:1) {
             cli::cli_status_update(
                 id = sb,
-                "{cli::symbol$arrow_right} Got {n_files - i} file{?s}, downloading {i}"
+                "{cli::symbol$arrow_right} Got {n_to_dl - i} file{?s}, downloading {i}"
             )
-            file_paths[i] <- s3_get(need_to_download[i, "s3_uri"], ...)
+            file_paths[i] <- s3_get(need_to_download[i, "uri"], ...)
         }
 
         cli::cli_status_clear(id = sb)
@@ -109,14 +103,11 @@ s3_get_files <- function(s3_uri,
     }
 
     download_time <- system.time({
-        need_to_download$file_path <- download_files_with_progress(download_folder = download_folder, quiet = TRUE, force = force, progress = progress)
+         download_files_with_progress(download_folder = download_folder, quiet = TRUE, force = TRUE, progress = progress)
     })["elapsed"]
 
-    cli::cli_alert_success("Downloaded {n_files} file{?s} in {prettyunits::pretty_sec(download_time)}.")
+    cli::cli_alert_success("Downloaded {n_to_dl} file{?s} in {prettyunits::pretty_sec(download_time)}.")
 
     # return all file paths (for files that already existed and those that were downloaded)
-    out <- rbind(exists_already, need_to_download)[,c('s3_uri', 'file_path')]
-    out$file_path <- unlist(out$file_path)
-
-    return(invisible(out))
+    return(invisible(dplyr::select(out, uri, file_path)))
 }
