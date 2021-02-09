@@ -59,12 +59,14 @@ Download multiple files with:
 s3_get_files(c(
           "s3://geomarker/testing_downloads/mtcars.rds",
           "s3://geomarker/testing_downloads/mtcars_again.rds"
-        ))
-#> ℹ 2 files totaling 2.45 kB will be downloaded to /Users/RASV5G/OneDrive - cchmc/s3/s3_downloads
-#> → Downloading 2 files.
-#> → Got 0 files, downloading 2
-#> → Got 1 file, downloading 1
-#> ✓ Downloaded 2 files in 134ms.
+        ),
+    confirm = FALSE)
+#> ℹ 1 file already exist in /Users/RASV5G/OneDrive - cchmc/s3/s3_downloads
+#> [1] "/Users/RASV5G/OneDrive - cchmc/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds"
+#> ℹ 1 file totaling 1.23 kB will be downloaded to /Users/RASV5G/OneDrive - cchmc/s3/s3_downloads
+#> → Downloading 1 files.
+#> → Got 0 files, downloading 1
+#> ✓ Downloaded 1 file in 119ms.
 ```
 
 ## Downloaded file paths
@@ -107,8 +109,8 @@ changed when downloading files by using the `download_folder`
 argument:
 
 ``` r
-s3_get("s3://geomarker/testing_downloads/mtcars.rds", download_folder = fs::path_home('/Desktop/s3_downloads'))
-#> ℹ s3://geomarker/testing_downloads/mtcars.rds is 1.23 kB; downloading to /Users/RASV5G/Desktop/s3_downloads/geomarker/testing_downloads/mtcars.rds
+s3_get("s3://geomarker/testing_downloads/mtcars.rds", download_folder = fs::path_home('~/Desktop/s3_downloads'))
+#> ℹ s3://geomarker/testing_downloads/mtcars.rds is 1.23 kB; downloading to /Users/RASV5G/~/Desktop/s3_downloads/geomarker/testing_downloads/mtcars.rds
 ```
 
 This can also be changed for the entire session by using the option

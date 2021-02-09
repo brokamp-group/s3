@@ -22,7 +22,8 @@ Imports:
     tibble,
     httr,
     glue,
-    purrr (>= 0.3.4)
+    purrr (>= 0.3.4),
+    dplyr
 Suggests: 
     testthat,
     withr
