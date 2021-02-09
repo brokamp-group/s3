@@ -51,14 +51,15 @@ test_that("s3_check_for_file_s3 returns error for private file without aws crede
   delete_test_download_folder()
 })
 
-test_that("s3_check_for_file_s3 returns TRUE if public file is available with aws credentials", {
+test_that("s3_check_for_file_s3 errors if public file is available but aws credentials are invalid", {
   skip_if_offline(host = "r-project.org")
+  skip_if_no_boto()
   delete_test_download_folder()
   withr::with_envvar(new = c(
     "AWS_ACCESS_KEY_ID" = "thisisfake",
     "AWS_SECRET_ACCESS_KEY" = "thisisfaketoo"
   ), {
-    expect_true(
+    expect_error(
       s3_check_for_file_s3(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
     )}
   )
