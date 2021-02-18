@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Cole Brokamp \email{cole.brokamp@gmail.com} (\href{https://orcid.org/0000-0002-0289-3151}{ORCID})
+\strong{Maintainer}: Cole Brokamp \email{cole.brokamp@gmail.com} (0000-0002-0289-3151)
 
 }
 \keyword{internal}
