@@ -66,3 +66,13 @@ test_that("s3_get does not download a private file with incorrect aws credential
   })
   delete_test_download_folder()
 })
+
+test_that("s3_get force public download", {
+  skip_if_offline(host = "r-project.org")
+  delete_test_download_folder()
+  expect_identical(
+    readRDS(s3_get("s3://geomarker/testing_downloads/mtcars.rds", force_public = T)),
+    mtcars
+  )
+  delete_test_download_folder()
+})

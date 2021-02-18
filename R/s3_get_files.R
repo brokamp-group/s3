@@ -6,6 +6,9 @@
 #' @param progress show download progress for each individual file? (currently only for public objects)
 #' @param force force download to overwrite existing S3 objects
 #' @param confirm ask user to interactively confirm downloads? (only possible when session is interactive)
+#' @param force_public defaults to FALSE; if TRUE, ignore any environment
+#'                    variables specifying AWS credentials and download the
+#'                    public file anonymously
 #' @return tibble with s3_uris and corresponding file paths to downloaded files (invisibly)
 #' @examples
 #' \dontrun{
@@ -40,7 +43,8 @@ s3_get_files <-
                                        fs::path_wd("s3_downloads")),
            progress = FALSE,
            force = FALSE,
-           confirm = TRUE) {
+           confirm = TRUE,
+           force_public = FALSE) {
 
   out <-
     purrr::map(s3_uri, s3_parse_uri) %>%
