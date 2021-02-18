@@ -23,7 +23,7 @@ s3_check_for_file_local <- function(s3_uri,
 }
 
 s3_check_for_file_s3 <- function(s3_uri,
-                                 force_public,
+                                 force_public = FALSE,
                                  download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads"))) {
 
   s3_uri_parsed <- s3_parse_uri(s3_uri)
