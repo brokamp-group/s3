@@ -6,9 +6,9 @@
 #' @param quiet suppress messages?
 #' @param force force download to overwrite existing S3 object
 #' @param progress show download progress? (currently only for public objects)
-#' @param force_public defaults to FALSE; if TRUE, ignore any environment
-#'                    variables specifying AWS credentials and download the
-#'                    public file anonymously
+#' @param public defaults to FALSE; if TRUE, ignore any environment
+#'                    variables specifying AWS credentials and
+#'                    attempt to download the file as publicly available
 #' @return file path to downloaded file (invisibly)
 #' @importFrom prettyunits pretty_bytes
 #' @importFrom prettyunits pretty_sec
@@ -29,9 +29,10 @@ s3_get <- function(s3_uri,
                    quiet = FALSE,
                    progress = FALSE,
                    force = FALSE,
-                   force_public = FALSE) {
+                   public = FALSE) {
 
   parsed_uri <- s3_parse_uri(s3_uri)
+
   dest_file <-
     fs::path_join(c(
       download_folder,
@@ -43,21 +44,15 @@ s3_get <- function(s3_uri,
   if (!force & s3_check_for_file_local(s3_uri, download_folder, quiet = quiet)) {
     return(invisible(dest_file))
   }
-  dest_file <-
-    fs::path_join(c(
-      download_folder,
-      parsed_uri$bucket,
-      parsed_uri$folder,
-      parsed_uri$file_name
-    ))
 
-  s3_check_for_file_s3(s3_uri, force_public, download_folder)
+  s3_check_for_file_s3(s3_uri, public, download_folder)
 
   fs::dir_create(fs::path_dir(dest_file))
 
   has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
+  if (public) has_aws_env_vars <- FALSE
 
-  if (has_aws_env_vars & !force_public) {
+  if (has_aws_env_vars) {
     stop_if_no_boto()
     boto$client("s3")$download_file(
       Bucket = parsed_uri$bucket,
@@ -72,7 +67,7 @@ s3_get <- function(s3_uri,
     progress <- NULL
   }
 
-  if (!has_aws_env_vars | force_public) {
+  if (!has_aws_env_vars) {
     gets <- httr::GET(
       parsed_uri$url,
       httr::write_disk(dest_file, overwrite = TRUE),

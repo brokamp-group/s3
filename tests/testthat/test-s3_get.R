@@ -75,7 +75,7 @@ test_that("s3_get force public download with aws creds", {
     "AWS_SECRET_ACCESS_KEY" = "thisisfaketoo"
   ), {
     expect_identical(
-      readRDS(s3_get("s3://geomarker/testing_downloads/mtcars.rds", force_public = TRUE)),
+      readRDS(s3_get("s3://geomarker/testing_downloads/mtcars.rds", public = TRUE)),
       mtcars
     )
   })

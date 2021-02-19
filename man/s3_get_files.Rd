@@ -4,9 +4,14 @@
 \alias{s3_get_files}
 \title{download several s3 files}
 \usage{
-s3_get_files(s3_uri, download_folder = getOption("s3.download_folder",
-  fs::path_wd("s3_downloads")), progress = FALSE, force = FALSE,
-  confirm = TRUE, force_public = FALSE)
+s3_get_files(
+  s3_uri,
+  download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
+  progress = FALSE,
+  force = FALSE,
+  confirm = TRUE,
+  public = FALSE
+)
 }
 \arguments{
 \item{s3_uri}{vector of S3 object URIs}
@@ -19,9 +24,9 @@ s3_get_files(s3_uri, download_folder = getOption("s3.download_folder",
 
 \item{confirm}{ask user to interactively confirm downloads? (only possible when session is interactive)}
 
-\item{force_public}{defaults to FALSE; if TRUE, ignore any environment
-variables specifying AWS credentials and download the
-public file anonymously}
+\item{public}{defaults to FALSE; if TRUE, ignore any environment
+variables specifying AWS credentials and
+attempt to download the file as publicly available}
 }
 \value{
 tibble with s3_uris and corresponding file paths to downloaded files (invisibly)

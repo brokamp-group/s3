@@ -1,9 +1,10 @@
 # get size of s3 file (number of bytes)
-s3_file_size <- function(s3_uri) {
+s3_file_size <- function(s3_uri, public = FALSE) {
 
     parsed_uri <- s3_parse_uri(s3_uri)
 
     has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
+    if (public) has_aws_env_vars <- FALSE
 
     if (has_aws_env_vars) {
         stop_if_no_boto()

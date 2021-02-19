@@ -4,9 +4,14 @@
 \alias{s3_get}
 \title{download s3 file}
 \usage{
-s3_get(s3_uri, download_folder = getOption("s3.download_folder",
-  fs::path_wd("s3_downloads")), quiet = FALSE, progress = FALSE,
-  force = FALSE, force_public = FALSE)
+s3_get(
+  s3_uri,
+  download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
+  quiet = FALSE,
+  progress = FALSE,
+  force = FALSE,
+  public = FALSE
+)
 }
 \arguments{
 \item{s3_uri}{URI for an S3 object}
@@ -19,9 +24,9 @@ s3_get(s3_uri, download_folder = getOption("s3.download_folder",
 
 \item{force}{force download to overwrite existing S3 object}
 
-\item{force_public}{defaults to FALSE; if TRUE, ignore any environment
-variables specifying AWS credentials and download the
-public file anonymously}
+\item{public}{defaults to FALSE; if TRUE, ignore any environment
+variables specifying AWS credentials and
+attempt to download the file as publicly available}
 }
 \value{
 file path to downloaded file (invisibly)
