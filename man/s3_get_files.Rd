@@ -9,7 +9,8 @@ s3_get_files(
   download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
   progress = FALSE,
   force = FALSE,
-  confirm = TRUE
+  confirm = TRUE,
+  public = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,10 @@ s3_get_files(
 \item{force}{force download to overwrite existing S3 objects}
 
 \item{confirm}{ask user to interactively confirm downloads? (only possible when session is interactive)}
+
+\item{public}{defaults to FALSE; if TRUE, ignore any environment
+variables specifying AWS credentials and
+attempt to download the file as publicly available}
 }
 \value{
 tibble with s3_uris and corresponding file paths to downloaded files (invisibly)

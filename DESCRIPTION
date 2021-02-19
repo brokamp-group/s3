@@ -1,12 +1,16 @@
 Package: s3
 Title: Download Files from AWS S3
-Version: 0.2.4
-Authors@R: 
+Version: 0.2.5
+Authors@R: c(
     person(given = "Cole",
            family = "Brokamp",
            role = c("aut", "cre"),
            email = "cole.brokamp@gmail.com",
-           comment = c(ORCID = "0000-0002-0289-3151"))
+           comment = c(ORCID = "0000-0002-0289-3151")),
+    person(given = "Erika",
+    family = "Rasnick",
+    role = c("aut"),
+    email = "erika.rasnick@cchmc.org"))
 Description: Download files hosted on AWS S3 to a local directory based on their URI. Avoid downloading files that are already present locally.  Allow for customization of where to store downloaded files.
 License: MIT + file LICENSE
 Encoding: UTF-8

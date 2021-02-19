@@ -51,6 +51,27 @@ test_that("s3_get_files downloads public files without aws credentials", {
   delete_test_download_folder()
 })
 
+test_that("s3_get_files downloads public files overriding credentials", {
+  skip_if_offline(host = "r-project.org")
+  delete_test_download_folder()
+  withr::with_envvar(new = c(
+    "AWS_ACCESS_KEY_ID" = "thisisfake",
+    "AWS_SECRET_ACCESS_KEY" = "thisisfaketoo"
+  ), {
+    expect_identical(
+      {
+        dl_results <- s3_get_files(c(
+          "s3://geomarker/testing_downloads/mtcars.rds",
+          "s3://geomarker/testing_downloads/mtcars_again.rds"
+        ), confirm = FALSE, public = TRUE)
+        lapply(dl_results$file_path, readRDS)
+      },
+      list(mtcars, mtcars)
+    )
+  })
+  delete_test_download_folder()
+})
+
 test_that("s3_get_files doesn't download files that already exist", {
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()

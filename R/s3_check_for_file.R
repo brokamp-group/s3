@@ -5,7 +5,7 @@ s3_check_for_file_local <- function(s3_uri,
 
   s3_uri_parsed <- s3_parse_uri(s3_uri)
 
-  dest_file <- 
+  dest_file <-
     fs::path_join(c(
       download_folder,
       s3_uri_parsed$bucket,
@@ -23,11 +23,12 @@ s3_check_for_file_local <- function(s3_uri,
 }
 
 s3_check_for_file_s3 <- function(s3_uri,
+                                 public = FALSE,
                                  download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads"))) {
 
   s3_uri_parsed <- s3_parse_uri(s3_uri)
 
-  dest_file <- 
+  dest_file <-
     fs::path_join(c(
       download_folder,
       s3_uri_parsed$bucket,
@@ -36,6 +37,7 @@ s3_check_for_file_s3 <- function(s3_uri,
     ))
 
   has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
+  if (public) has_aws_env_vars <- FALSE
 
   if (!has_aws_env_vars) {
     s3_response <-
@@ -50,7 +52,7 @@ s3_check_for_file_s3 <- function(s3_uri,
         Key = s3_uri_parsed$key)
     s3_response <- s3_head[['ResponseMetadata']][['HTTPStatusCode']]
   }
-  
+
   if (s3_response == 200) return(invisible(TRUE))
 
   if (s3_response == 403) {
