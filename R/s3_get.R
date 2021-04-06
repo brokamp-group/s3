@@ -52,13 +52,10 @@ s3_get <- function(s3_uri,
   has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
   if (public) has_aws_env_vars <- FALSE
 
+  url_get <- parsed_uri$url
+
   if (has_aws_env_vars) {
-    stop_if_no_boto()
-    boto$client("s3")$download_file(
-      Bucket = parsed_uri$bucket,
-      Key = parsed_uri$key,
-      Filename = dest_file
-    )
+    url_get <- get_aws_signed_url(s3_uri)
   }
 
   if (progress) {
@@ -67,13 +64,14 @@ s3_get <- function(s3_uri,
     progress <- NULL
   }
 
-  if (!has_aws_env_vars) {
-    gets <- httr::GET(
-      parsed_uri$url,
-      httr::write_disk(dest_file, overwrite = TRUE),
-      progress
-    )
-  }
+  gets <- httr::GET(
+    url_get,
+    httr::write_disk(dest_file, overwrite = TRUE),
+    progress
+  )
 
     return(invisible(dest_file))
 }
+
+## TODO implement httr::write_memory() to prevent write/read from disk loop
+

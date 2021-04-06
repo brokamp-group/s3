@@ -59,3 +59,17 @@ s3_check_for_file_s3 <- function(s3_uri,
     stop("file not found, check the URI; do you need AWS credentials for this file?")
   }
 }
+## TODO change from boto for checking file and file size
+## HEAD verb
+        ## r <- httr::HEAD(url, H, query = query, ...)
+        ## s <- httr::http_status(r)
+        ## if (tolower(s$category) == "success") {
+        ##     out <- TRUE
+        ##     attributes(out) <- c(attributes(out), httr::headers(r))
+        ##     return(out)
+        ## } else {
+        ##     message(s$message)
+        ##     out <- FALSE
+        ##     attributes(out) <- c(attributes(out), httr::headers(r))
+        ##     return(out)
+        ## }
