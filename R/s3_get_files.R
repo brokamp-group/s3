@@ -2,6 +2,7 @@
 #'
 #' @export
 #' @param s3_uri vector of S3 object URIs
+#' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
 #' @param download_folder location to download S3 objects
 #' @param progress show download progress for each individual file? (currently only for public objects)
 #' @param force force download to overwrite existing S3 objects

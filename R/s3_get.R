@@ -2,6 +2,7 @@
 #'
 #' @export
 #' @param s3_uri URI for an S3 object
+#' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
 #' @param download_folder location to download S3 object
 #' @param quiet suppress messages?
 #' @param force force download to overwrite existing S3 object
