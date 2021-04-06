@@ -20,32 +20,32 @@ knitr::opts_chunk$set(
 [![R build status](https://github.com/geomarker-io/s3/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/s3/actions)
 <!-- badges: end -->
 
-> download files from AWS S3
+> The s3 R package is used for downloading public and private files hosted on AWS S3 given their URI and region. It avoids downloading files more than once by using a user-customizable download location shared across R sessions and users. It always (invisibly) returns the path(s) to the downloaded file(s), making it easy to subsequently read into R.
+
+## Installation
+
+Currently, the package is only available on GitHub. Install inside `R` with:
+
+```r
+# install.packages("remotes")
+remotes::install_github("geomarker-io/s3")
+```
 
 ## Usage
 
-This R package can download public and private files hosted on AWS S3 to a local directory based on their URI. It will avoid downloading files that are already present and also allows for customization of where to store downloaded files.
+### Downloading Files
 
-### Identifying files with a URI
+```{r}
+library(s3)
+```
 
-URI stands for [Universal Resource Identifier](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier), which is a federated and extensible naming system. In practice, this means that a URI is a character string that can uniquely identify a particular resource. An example of a commonly used URI scheme is `https` for identifying web resources, e.g. `https://r-project.org`.
-
-Here, we use the `s3` scheme as defined by AWS. For example, the URI for a file hosted on S3 called `mtcars.rds` in a bucket called `geomarker` in a folder called `test_downloads` would be:
-
- `s3://geomarker/test_downloads/mtcars.rds`
-
-
-### Example Usage
-
-Download a single file with:
+Download a single file specified by its [URI](#URI) with:
 
 ```{r, include=FALSE}
 Sys.unsetenv(c('AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'))
 ```
 
-
 ```{r}
-library(s3)
 s3_get("s3://geomarker/testing_downloads/mtcars.rds")
 ```
 
@@ -65,8 +65,27 @@ s3_get_files(c(
 	confirm = FALSE)
 ```
 
+### Private Files
 
-## Downloaded file paths
+Downloading private files requires the name of the S3 bucket's region (this is determined automatically when the file is public):
+
+```{r, eval = FALSE}
+s3_get("s3://geomarker/testing_downloads/mtcars_private.rds", region = "us-east-2")
+```
+
+#### Setting up AWS credentials
+
+You must have the appropriate AWS S3 credentials set to gain access to non-public files. As with other AWS command line tools and R packages, you can use the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to gain access to such files. 
+
+It is highly recommended to setup your environment variables outside of your R script to avoid including sensitive information within your R script. This can be done by exporting environment variables before starting R (see [AWS CLI documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) on this) or by defining them in a `.Renviron` file (see `?.Renviron` within `R`).
+
+You can use the internal helper function to check if AWS key environment variables are set.
+
+```{r}
+s3:::check_for_aws_env_vars()
+```
+
+### Downloaded file paths
 
 Files are saved within a directory structure matching that of the S3 URI; this directory is created if necessary. `s3_get` and `s3_get_files` both invisibly return the file path(s) of the downloaded files so that they can be further used to access the downloaded files. This makes it possible for different users with different operating systems and/or different project file structures and locations to utilize a downloaded S3 file without changing their source code:
 
@@ -82,9 +101,9 @@ This means that `s3` is not just for downloading objects. Since `s3_get` and `s3
 By default, files downloaded from S3 will be stored in a folder called `s3_downloads` located within the current working directory. This can be changed when downloading files by using the `download_folder` argument:
 
 ```{r}
-s3_get("s3://geomarker/testing_downloads/mtcars.rds", download_folder = fs::path_home('~/Desktop/s3_downloads'))
+s3_get("s3://geomarker/testing_downloads/mtcars.rds",
+       download_folder = fs::path_home('~/Desktop/s3_downloads'))
 ```
-
 
 This can also be changed for the entire session by using the option `s3.download_folder`. For example, specifying `options(s3.download_folder = /scratch/broeg1/s3_downloads)` will write all downloaded files to `/scratch/broeg1/s3_downloads`.
 
@@ -92,31 +111,13 @@ Using a folder for all downloads will prevent duplication of files within differ
 
 As above, this feature also allows different users to store downloaded S3 files in different locations (e.g. a network mounted drive, a scratch folder on a high performance cluster, an external hard drive, a temporary directory) without having to change their R script to specify file paths specific to their computer.
 
+### URI
 
-## Installation
+URI stands for [Universal Resource Identifier](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier), which is a federated and extensible naming system. In practice, this means that a URI is a character string that can uniquely identify a particular resource. An example of a commonly used URI scheme is `https` for identifying web resources, e.g. `https://r-project.org`.
 
-Currently, the package is only available on GitHub. Install inside `R` with:
+Here, we use the `s3` scheme as defined by AWS. For example, the URI for a file hosted on S3 called `mtcars.rds` in a bucket called `geomarker` in a folder called `test_downloads` would be:
 
-```r
-# install.packages("remotes")
-remotes::install_github("geomarker-io/s3")
-```
-
-No further configuration is necessary, *but* if you would like to download private files from S3, you will need to install the `boto3` python module.
-
-### `boto3` python module installation
-
-The package uses [`reticulate`](https://rstudio.github.io/reticulate/) to expose functions from the [`boto3`](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) python module.  This allows us to take advantage of its concurrent transfer operations using threads, but requires the module to be installed.
-
- Although the package can be installed, loaded, and used to download public files on S3  without the `boto3` python module, private files will not be able to be downloaded without it. If `boto3` is unavailable and an attempt to download a private S3 file is made, you will be advised to install it from within `R` by calling `reticulate::py_install("boto3")`, which will automatically install it within a virtualenv or Conda environment named `r-reticulate`. Additionally, if your system does not have a compatible version of python, you will be asked to install [`miniconda`](https://docs.conda.io/en/latest/miniconda.html) from within `R`.
-
-### Setting up AWS credentials
-
-You must have the appropriate AWS S3 credentials set to gain access to non-public files. As with other AWS command line tools and R packages, you can use the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to gain access to such files. 
-
-It is highly recommended to setup your environment variables outside of your R script to avoid including sensitive information within your R script. This can be done by exporting environment variables before starting R (see [AWS CLI documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) on this) or by defining them in a `.Renviron` file (see `?.Renviron` within `R`).
-
-You can use the internal helper function `s3:::check_for_aws_env_vars()` to check if your AWS key environment variables are set.
+ `s3://geomarker/test_downloads/mtcars.rds`
 
 ```{r, include = FALSE}
 fs::dir_delete(fs::path_wd('s3_downloads'))
