@@ -15,7 +15,6 @@ test_that("s3_get_files downloads public files", {
 
 test_that("s3_get_files downloads private files", {
   skip_if_offline(host = "r-project.org")
-  skip_if_no_boto()
   skip_if_no_aws_credentials()
   delete_test_download_folder()
     expect_identical({

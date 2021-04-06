@@ -4,3 +4,5 @@
 .Ruserdata
 *.qs
 *.rds
+/README.html
+/R/tmp_credentials.R
