@@ -1,13 +1,9 @@
-# credentials
-
 # https://gist.github.com/sada1993/055f6d3c546cb97ea9d3b11f9a92e91e#file-generate_s3_signed_url-r
 
-get_aws_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2"){
+s3_get_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2"){
 
   parsed_uri <- s3_parse_uri(s3_uri)
 
-  bucket <- parsed_uri$bucket
-  file <- parsed_uri$key
   key <- Sys.getenv("AWS_ACCESS_KEY_ID")
   secret <- Sys.getenv("AWS_SECRET_ACCESS_KEY")
 
@@ -26,7 +22,7 @@ get_aws_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2
       region = region,
       service = "s3",
       verb = "GET",
-      action = glue::glue("/{bucket}/{file}"),
+      action = glue::glue("/{parsed_uri$bucket}/{parsed_uri$key}"),
       key = key,
       secret = secret,
       request_body = "",
@@ -45,8 +41,8 @@ get_aws_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2
   return(
     glue::glue(
       "https://s3-{region}.amazonaws.com",
-      "/{bucket}",
-      "/{file}",
+      "/{parsed_uri$bucket}",
+      "/{parsed_uri$key}",
       "?X-Amz-Algorithm={sig$Query$`X-Amz-Algorithm`}",
       "&X-Amz-Credential={sig$Query$`X-Amz-Credential`}",
       "&X-Amz-Date={sig$Query$`X-Amz-Date`}",
@@ -57,45 +53,4 @@ get_aws_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2
 
 }
 
-get_aws_signed_url("s3://geomarker/testing_downloads/mtcars_private.rds")
-
-
-
-## https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-auth-using-authorization-header.html
-
-make_headers <- function(s3_uri) {
-
-  parsed_uri <- s3_parse_uri(s3_uri)
-
-  headers <- list()
-  date_time <- format(Sys.time(), "%Y%m%dT%H%M%SZ", tz = "UTC")
-  headers[["x-amz-date"]] <- date_time
-  headers[["x-amz-content-sha256"]] <- tolower(digest::digest("", algo = "sha256", serialize = FALSE))
-  headers[["host"]] <- glue::glue("{parsed_uri$bucket}.s3.amazonaws.com")
-
-  sig <-
-    aws.signature::signature_v4_auth(
-      datetime = date_time,
-      region = "us-east-2",
-      service = "s3",
-      verb = "GET",
-      action = glue::glue("/{parsed_uri$bucket}/{parsed_uri$key}"),
-      algorithm = "AWS4-HMAC-SHA256",
-      canonical_headers = headers,
-      request_body = "",
-      key = Sys.getenv("AWS_ACCESS_KEY_ID"),
-      secret = Sys.getenv("AWS_SECRET_ACCESS_KEY")
-    )
-  
-  headers[["Authorization"]] <- sig[["SignatureHeader"]]
-
-  return(headers)
-}
-
-make_headers("s3://geomarker/testing_downloads/mtcars_private.rds")
-
-httr::GET(
-  s3_parse_uri("s3://geomarker/testing_downloads/mtcars_private.rds")$url,
-  do.call(httr::add_headers, make_headers("s3://geomarker/testing_downloads/mtcars_private.rds")),
-  httr::write_disk("testing.rds", overwrite = TRUE)
-)
+## get_signed_url("s3://geomarker/testing_downloads/mtcars_private.rds")

@@ -55,7 +55,7 @@ s3_get <- function(s3_uri,
   url_get <- parsed_uri$url
 
   if (has_aws_env_vars) {
-    url_get <- get_aws_signed_url(s3_uri)
+    url_get <- get_signed_url(s3_uri)
   }
 
   if (progress) {
@@ -72,6 +72,3 @@ s3_get <- function(s3_uri,
 
     return(invisible(dest_file))
 }
-
-## TODO implement httr::write_memory() to prevent write/read from disk loop
-
