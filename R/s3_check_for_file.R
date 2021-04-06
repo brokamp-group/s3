@@ -23,6 +23,7 @@ s3_check_for_file_local <- function(s3_uri,
 }
 
 s3_check_for_file_s3 <- function(s3_uri,
+                                 region = "us-east-2",
                                  public = FALSE,
                                  download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads"))) {
 
@@ -39,37 +40,19 @@ s3_check_for_file_s3 <- function(s3_uri,
   has_aws_env_vars <- suppressMessages(check_for_aws_env_vars())
   if (public) has_aws_env_vars <- FALSE
 
-  if (!has_aws_env_vars) {
-    s3_response <-
-      httr::HEAD(s3_uri_parsed$url) %>%
-      httr::status_code()
-  }
+  url_get <- s3_uri_parsed$url
 
   if (has_aws_env_vars) {
-    s3_head <-
-      boto$client("s3")$head_object(
-        Bucket = s3_uri_parsed$bucket,
-        Key = s3_uri_parsed$key)
-    s3_response <- s3_head[['ResponseMetadata']][['HTTPStatusCode']]
+    url_get <- s3_get_signed_url(s3_uri, region = region, verb = "HEAD")
   }
+
+  s3_response <-
+    httr::HEAD(url_get) %>%
+    httr::status_code()
 
   if (s3_response == 200) return(invisible(TRUE))
 
-  if (s3_response == 403) {
+  if (s3_response %in% c(403, 404)) {
     stop("file not found, check the URI; do you need AWS credentials for this file?")
   }
 }
-## TODO change from boto for checking file and file size
-## HEAD verb
-        ## r <- httr::HEAD(url, H, query = query, ...)
-        ## s <- httr::http_status(r)
-        ## if (tolower(s$category) == "success") {
-        ##     out <- TRUE
-        ##     attributes(out) <- c(attributes(out), httr::headers(r))
-        ##     return(out)
-        ## } else {
-        ##     message(s$message)
-        ##     out <- FALSE
-        ##     attributes(out) <- c(attributes(out), httr::headers(r))
-        ##     return(out)
-        ## }

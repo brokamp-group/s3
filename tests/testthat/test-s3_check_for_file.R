@@ -21,7 +21,7 @@ test_that("s3_check_for_file_local returns FALSE if file does not exist locally"
 test_that("s3_check_for_file_s3 returns error if file doesn't exist in S3", {
   skip_if_offline(host = "r-project.org")
   expect_error(
-    s3_check_for_file_s3("s3://geomarker/testing_downloads/foo-foo.rds")
+    s3_check_for_file_s3(s3_uri = "s3://geomarker/testing_downloads/foo-foo.rds")
   )
 })
 

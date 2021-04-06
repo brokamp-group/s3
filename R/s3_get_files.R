@@ -39,6 +39,7 @@
 
 s3_get_files <-
   function(s3_uri,
+           region = "us-east-2",
            download_folder = getOption("s3.download_folder",
                                        fs::path_wd("s3_downloads")),
            progress = FALSE,
@@ -84,7 +85,7 @@ s3_get_files <-
 
     need_to_download <- dplyr::filter(out, !exists_already)
 
-    files_size <- Reduce(f = `+`, x = lapply(need_to_download$uri, s3_file_size, public))
+    files_size <- Reduce(f = `+`, x = lapply(need_to_download$uri, s3_file_size, region = region, public = public))
 
     cli::cli_alert_info("{n_to_dl} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {download_folder} ")
     if (interactive() & confirm) ui_confirm()
@@ -107,7 +108,14 @@ s3_get_files <-
     }
 
     download_time <- system.time({
-         download_files_with_progress(download_folder = download_folder, quiet = TRUE, force = TRUE, public = public, progress = progress)
+      download_files_with_progress(
+        region = region,
+        download_folder = download_folder,
+        quiet = TRUE,
+        force = TRUE,
+        public = public,
+        progress = progress
+      )
     })["elapsed"]
 
     cli::cli_alert_success("Downloaded {n_to_dl} file{?s} in {prettyunits::pretty_sec(download_time)}.")

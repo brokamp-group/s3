@@ -1,6 +1,6 @@
 # https://gist.github.com/sada1993/055f6d3c546cb97ea9d3b11f9a92e91e#file-generate_s3_signed_url-r
 
-s3_get_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2"){
+s3_get_signed_url <- function(s3_uri, region = "us-east-2", verb = "GET"){
 
   parsed_uri <- s3_parse_uri(s3_uri)
 
@@ -21,7 +21,7 @@ s3_get_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2"
       datetime = date_time,
       region = region,
       service = "s3",
-      verb = "GET",
+      verb = verb,
       action = glue::glue("/{parsed_uri$bucket}/{parsed_uri$key}"),
       key = key,
       secret = secret,
@@ -30,7 +30,7 @@ s3_get_signed_url <- function(s3_uri, timeout_seconds = 30, region = "us-east-2"
         `X-Amz-Algorithm` = "AWS4-HMAC-SHA256",
         `X-Amz-Credential` = glue::glue("{key}{date}{region_encoded}s3/aws4_request"),
         `X-Amz-Date` = date_time,
-        `X-Amz-Expires` = timeout_seconds,
+        `X-Amz-Expires` = 30,
         `X-Amz-SignedHeaders` = "host",
         `x-amz-content-sha256` = body_hash
       ),

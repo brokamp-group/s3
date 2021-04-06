@@ -19,7 +19,19 @@ test_that("s3_get downloads a private file", {
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()
   expect_identical(
-    readRDS(s3_get("s3://geomarker/testing_downloads/mtcars_private.rds")),
+    readRDS(s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars_private.rds")),
+    mtcars
+  )
+  delete_test_download_folder()
+})
+
+test_that("s3_get downloads a private file from a different region", {
+  skip_if_no_boto()
+  skip_if_no_aws_credentials()
+  skip_if_offline(host = "r-project.org")
+  delete_test_download_folder()
+  expect_identical(
+    readRDS(s3_get("s3://geomarker-us-west-2/testing_downloads/mtcars_private.rds", region = "us-west-2")),
     mtcars
   )
   delete_test_download_folder()
