@@ -1,6 +1,6 @@
 Package: s3
 Title: Download Files from AWS S3
-Version: 0.2.5
+Version: 0.3.0
 Authors@R: c(
     person(given = "Cole",
            family = "Brokamp",
