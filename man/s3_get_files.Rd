@@ -6,6 +6,7 @@
 \usage{
 s3_get_files(
   s3_uri,
+  region = "us-east-2",
   download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
   progress = FALSE,
   force = FALSE,
@@ -15,6 +16,8 @@ s3_get_files(
 }
 \arguments{
 \item{s3_uri}{vector of S3 object URIs}
+
+\item{region}{AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)}
 
 \item{download_folder}{location to download S3 objects}
 

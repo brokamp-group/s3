@@ -1,21 +1,20 @@
 test_that("s3_get_files downloads public files", {
   skip_if_offline(host = "r-project.org")
   delete_test_download_folder()
-    expect_identical({
-        dl_results <- s3_get_files(c(
-          "s3://geomarker/testing_downloads/mtcars.rds",
-          "s3://geomarker/testing_downloads/mtcars_again.rds"
-        ), confirm = FALSE)
-        lapply(dl_results$file_path, readRDS)
-      },
-      list(mtcars, mtcars)
-    )
+  expect_identical({
+      dl_results <- s3_get_files(s3_uri = c(
+        "s3://geomarker/testing_downloads/mtcars.rds",
+        "s3://geomarker/testing_downloads/mtcars_again.rds"
+      ), confirm = FALSE)
+      lapply(dl_results$file_path, readRDS)
+    },
+    list(mtcars, mtcars)
+  )
   delete_test_download_folder()
 })
 
 test_that("s3_get_files downloads private files", {
   skip_if_offline(host = "r-project.org")
-  skip_if_no_boto()
   skip_if_no_aws_credentials()
   delete_test_download_folder()
     expect_identical({
