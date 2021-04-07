@@ -89,3 +89,18 @@ test_that("s3_get_files doesn't download files that already exist", {
   )
   delete_test_download_folder()
   })
+
+test_that("s3_get_files downloads public files in bucket's root folder", {
+  skip_if_offline(host = "r-project.org")
+  delete_test_download_folder()
+  expect_identical({
+      dl_results <- s3_get_files(s3_uri = c(
+        "s3://geomarker/mtcars.rds",
+        "s3://geomarker/mtcars_again.rds"
+      ), confirm = FALSE)
+      lapply(dl_results$file_path, readRDS)
+    },
+    list(mtcars, mtcars)
+  )
+  delete_test_download_folder()
+})

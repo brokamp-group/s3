@@ -13,11 +13,16 @@ s3_parse_uri <- function(s3_uri) {
         fs::path_join() %>%
         as.character()
 
-    if (length(file_path_parts) == 3) folder <- NULL # if file is in root of bucket (no folder)
-
+  # check for files in root of bucket
+  if (length(file_path_parts) == 3) {
+    folder <- ""
+    key <- file_name
+  }
+  else {
     key <-
-        fs::path_join(c(folder, file_name)) %>%
-        as.character()
+      fs::path_join(c(folder, file_name)) %>%
+      as.character()
+  }
 
     s3_url <- glue::glue("https://{bucket}.s3.amazonaws.com/{key}")
 
