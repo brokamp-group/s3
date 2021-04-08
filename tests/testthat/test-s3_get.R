@@ -91,3 +91,18 @@ test_that("s3_get force public download with aws creds", {
   })
   delete_test_download_folder()
 })
+
+test_that("s3_get downloads a file in the root of a bucket", {
+  skip_if_offline(host = "r-project.org")
+  delete_test_download_folder()
+  withr::with_envvar(new = c(
+    "AWS_ACCESS_KEY_ID" = NA,
+    "AWS_SECRET_ACCESS_KEY" = NA
+  ), {
+    expect_identical(
+      readRDS(s3_get("s3://geomarker/mtcars.rds")),
+      mtcars
+    )
+  })
+  delete_test_download_folder()
+})

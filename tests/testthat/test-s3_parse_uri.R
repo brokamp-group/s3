@@ -33,7 +33,7 @@ test_that("s3_parse_uri works with no folders in URI", {
       uri = "s3://geomarker/mtcars.rds",
       bucket = "geomarker",
       key = "mtcars.rds",
-      folder = NULL,
+      folder = "",
       file_name = "mtcars.rds",
       url = "https://geomarker.s3.amazonaws.com/mtcars.rds"
     )
