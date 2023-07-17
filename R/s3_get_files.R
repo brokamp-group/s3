@@ -79,7 +79,7 @@ s3_get_files <-
     }
 
     if (n_exist > 0 & !force) {
-      cli::cli_alert_info("{n_exist} file{?s} already exist")
+      cli::cli_alert_info("{n_exist} file{?s} already exis{?ts/t}")
     }
 
     if (force) out$exists_already <- TRUE
@@ -92,7 +92,7 @@ s3_get_files <-
     if (interactive() & confirm) ui_confirm()
 
     download_files_with_progress <- function(...) {
-        sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_to_dl} files.")
+        sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_to_dl} file{?s}.")
 
         file_paths <- vector("list", length = n_to_dl)
 
