@@ -20,11 +20,23 @@ knitr::opts_chunk$set(
 [![R build status](https://github.com/geomarker-io/s3/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/s3/actions)
 <!-- badges: end -->
 
-> The s3 R package is used for downloading public and private files hosted on AWS S3 given their URI and region. It avoids downloading files more than once by using a user-customizable download location shared across R sessions and users. It always (invisibly) returns the path(s) to the downloaded file(s), making it easy to subsequently read into R.
+s3 is an R package designed to download files hosted on AWS S3.
+
+Downloads can be saved to a location shared across R sessions/users and download functions always return paths to downloaded files. Files already present in the download location will be used before trying to download a file again. This means more concise code for reading/loading files after downloading them (if they are not already downloaded). For example:
+
+```{r, eval = FALSE}
+s3::s3_get("s3://modis-aod-nasa/2020.05.22.tif")
+```
 
 ## Installation
 
-Currently, the package is only available on GitHub. Install inside `R` with:
+Install the CRAN latest release inside `R` with:
+
+```r
+install.packages("s3")
+```
+
+Install the development version from GitHub:
 
 ```r
 # install.packages("remotes")
@@ -93,8 +105,6 @@ Files are saved within a directory structure matching that of the S3 URI; this d
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
     readRDS()
 ```
-
-This means that `s3` is not just for downloading objects. Since `s3_get` and `s3_get_files` will not download files that already exist and always return paths to these files, code utilizing these functions can be kept in R scripts designed to read in objects everytime they are run.
 
 ### Customizing download location
 
