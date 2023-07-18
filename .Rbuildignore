@@ -7,3 +7,5 @@ backup_s3_code.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
+^CRAN-SUBMISSION$
+^cran-comments\.md$
