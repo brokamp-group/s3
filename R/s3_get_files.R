@@ -49,8 +49,8 @@ s3_get_files <-
            public = FALSE) {
 
   out <-
-    purrr::map(s3_uri, s3_parse_uri) %>%
-    dplyr::bind_rows() %>%
+    purrr::map(s3_uri, s3_parse_uri) |>
+    dplyr::bind_rows() |>
     dplyr::mutate(exists_already = purrr::map_lgl(uri,
       s3_check_for_file_local,
       download_folder = download_folder,
@@ -58,8 +58,8 @@ s3_get_files <-
     ))
 
   out <-
-    out %>%
-    dplyr::rowwise() %>%
+    out |>
+    dplyr::rowwise() |>
     dplyr::mutate(
       file_path =
         fs::path_join(c(
