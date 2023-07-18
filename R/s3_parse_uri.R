@@ -1,4 +1,3 @@
-# function that converts an s3 uri to the components needed
 s3_parse_uri <- function(s3_uri) {
 
     if (!grepl("^(s3://)", s3_uri)) {

@@ -32,20 +32,14 @@ variables specifying AWS credentials and
 attempt to download the file as publicly available}
 }
 \value{
-file path to downloaded file (invisibly)
+a character string that is the file path to the downloaded file (invisibly)
 }
 \description{
-download s3 file
-}
-\details{
-s3_get will politely refuse to download an S3 object if it already exists within the download_folder.
-
-Invisibly returning the S3 object file path allows for further usage of file without hard coding.
-(See example)
+s3_get will reuse, rather than redownload, an S3 object if it already exists within the \code{download_folder}.
 }
 \examples{
 \donttest{
-s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
+s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds", download_folder = tempdir())
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
     readRDS()
 }

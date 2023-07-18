@@ -1,6 +1,7 @@
 #' download several s3 files
-#'
-#' @export
+#' 
+#' Progress messages for downloading several S3 objects at once cannot be silenced.
+#' Like s3_get, S3 objects that already exists within the download_folder will not be re downloaded
 #' @param s3_uri vector of S3 object URIs
 #' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
 #' @param download_folder location to download S3 objects
@@ -10,34 +11,15 @@
 #' @param public defaults to FALSE; if TRUE, ignore any environment
 #'                    variables specifying AWS credentials and
 #'                    attempt to download the file as publicly available
-#' @return tibble with s3_uris and corresponding file paths to downloaded files (invisibly)
+#' @return data.frame (or tibble) with s3_uris and corresponding file paths to downloaded files (invisibly)
 #' @examples
 #' \donttest{
 #' s3_get_files(c(
 #'     "s3://geomarker/testing_downloads/mtcars.rds",
 #'     "s3://geomarker/testing_downloads/mtcars.fst"
-#' ))
-#'
-#' dl_results <- s3_get_files(c(
-#'     "s3://geomarker/testing_downloads/mtcars.rds",
-#'     "s3://geomarker/testing_downloads/mtcars_again.rds"
-#' ))
-#' lapply(dl_results$file_path, readRDS)
-#'
-#' # download some larger files
-#' s3_get_files(s3_uri = c(
-#'     "s3://geomarker/testing_downloads/zctas_2000_contig_us_5072.rds",
-#'     "s3://geomarker/testing_downloads/county_fips_contig_us_5072.rds"
-#' ))
+#' ), download_folder = tempdir())
 #' }
-#' @details
-#' Progress messages for downloading several S3 objects at once cannot be silenced.
-#'
-#' Like s3_get, S3 objects that already exists within the download_folder will not be re downloaded
-#'
-#' Invisibly returning the S3 object file paths allows for further usage of files without hard coding.
-#' (See example)
-
+#' @export
 s3_get_files <-
   function(s3_uri,
            region = "us-east-2",
