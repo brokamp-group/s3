@@ -46,7 +46,7 @@ Invisibly returning the S3 object file paths allows for further usage of files w
 (See example)
 }
 \examples{
-\dontrun{
+\donttest{
 s3_get_files(c(
     "s3://geomarker/testing_downloads/mtcars.rds",
     "s3://geomarker/testing_downloads/mtcars.fst"

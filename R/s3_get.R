@@ -14,7 +14,7 @@
 #' @importFrom prettyunits pretty_bytes
 #' @importFrom prettyunits pretty_sec
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
 #'     readRDS()

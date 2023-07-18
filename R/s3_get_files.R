@@ -12,7 +12,7 @@
 #'                    attempt to download the file as publicly available
 #' @return tibble with s3_uris and corresponding file paths to downloaded files (invisibly)
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' s3_get_files(c(
 #'     "s3://geomarker/testing_downloads/mtcars.rds",
 #'     "s3://geomarker/testing_downloads/mtcars.fst"
