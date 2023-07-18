@@ -102,7 +102,7 @@ s3:::check_for_aws_env_vars()
 Files are saved within a directory structure matching that of the S3 URI; this directory is created if necessary. `s3_get` and `s3_get_files` both invisibly return the file path(s) of the downloaded files so that they can be further used to access the downloaded files. This makes it possible for different users with different operating systems and/or different project file structures and locations to utilize a downloaded S3 file without changing their source code:
 
 ```{r}
-s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
+s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
     readRDS()
 ```
 

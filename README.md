@@ -73,7 +73,7 @@ s3_get_files(c(
 #> ℹ 1 file totaling 1.23 kB will be downloaded to '/Users/broeg1/code/s3/s3_downloads'
 #> → Downloading 1 file.
 #> → Got 0 files, downloading 1
-#> ✔ Downloaded 1 file in 97ms.
+#> ✔ Downloaded 1 file in 91ms.
 ```
 
 ### Private Files
@@ -120,7 +120,7 @@ different project file structures and locations to utilize a downloaded
 S3 file without changing their source code:
 
 ``` r
-s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
+s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
     readRDS()
 #> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/Users/broeg1/code/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds'
 #>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb

@@ -16,7 +16,7 @@
 #' @examples
 #' \dontrun{
 #' s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
-#' s3_get("s3://geomarker/testing_downloads/mtcars.rds") %>%
+#' s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
 #'     readRDS()
 #' }
 #' @details
