@@ -1,10 +1,9 @@
 #' download several s3 files
 #' 
 #' Progress messages for downloading several S3 objects at once cannot be silenced.
-#' Like s3_get, S3 objects that already exists within the download_folder will not be re downloaded
+#' Like s3_get, S3 objects that have already been downloaded will not be re downloaded
 #' @param s3_uri vector of S3 object URIs
 #' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
-#' @param download_folder location to download S3 objects
 #' @param progress show download progress for each individual file? (currently only for public objects)
 #' @param force force download to overwrite existing S3 objects
 #' @param confirm ask user to interactively confirm downloads? (only possible when session is interactive)
@@ -17,14 +16,12 @@
 #' s3_get_files(c(
 #'     "s3://geomarker/testing_downloads/mtcars.rds",
 #'     "s3://geomarker/testing_downloads/mtcars.fst"
-#' ), download_folder = tempdir())
+#' ))
 #' }
 #' @export
 s3_get_files <-
   function(s3_uri,
            region = "us-east-2",
-           download_folder = getOption("s3.download_folder",
-                                       fs::path_wd("s3_downloads")),
            progress = FALSE,
            force = FALSE,
            confirm = TRUE,
@@ -35,7 +32,6 @@ s3_get_files <-
     dplyr::bind_rows() |>
     dplyr::mutate(exists_already = purrr::map_lgl(uri,
       s3_check_for_file_local,
-      download_folder = download_folder,
       quiet = TRUE
     ))
 
@@ -45,7 +41,7 @@ s3_get_files <-
     dplyr::mutate(
       file_path =
         fs::path_join(c(
-          download_folder,
+          tools::R_user_dir("s3", "data"),
           bucket,
           folder,
           file_name
@@ -70,7 +66,7 @@ s3_get_files <-
 
     files_size <- Reduce(f = `+`, x = lapply(need_to_download$uri, s3_file_size, region = region, public = public))
 
-    cli::cli_alert_info("{n_to_dl} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {download_folder} ")
+    cli::cli_alert_info("{n_to_dl} file{?s} totaling {prettyunits::pretty_bytes(files_size)} will be downloaded to {tools::R_user_dir('s3', 'data')}")
     if (interactive() & confirm) ui_confirm()
 
     download_files_with_progress <- function(...) {
@@ -93,7 +89,6 @@ s3_get_files <-
     download_time <- system.time({
       download_files_with_progress(
         region = region,
-        download_folder = download_folder,
         quiet = TRUE,
         force = TRUE,
         public = public,

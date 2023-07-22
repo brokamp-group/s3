@@ -1,6 +1,5 @@
 test_that("s3_get downloads a public file without aws credentials", {
   skip_if_offline(host = "r-project.org")
-  delete_test_download_folder()
   withr::with_envvar(new = c(
     "AWS_ACCESS_KEY_ID" = NA,
     "AWS_SECRET_ACCESS_KEY" = NA
@@ -104,5 +103,5 @@ test_that("s3_get downloads a file in the root of a bucket", {
       mtcars
     )
   })
-  delete_test_download_folder()
+  unlink(fs::path(tools::R_user_dir("s3", "data"), "geomarker","mtcars.rds"))
 })

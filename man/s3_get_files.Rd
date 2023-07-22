@@ -7,7 +7,6 @@
 s3_get_files(
   s3_uri,
   region = "us-east-2",
-  download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
   progress = FALSE,
   force = FALSE,
   confirm = TRUE,
@@ -18,8 +17,6 @@ s3_get_files(
 \item{s3_uri}{vector of S3 object URIs}
 
 \item{region}{AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)}
-
-\item{download_folder}{location to download S3 objects}
 
 \item{progress}{show download progress for each individual file? (currently only for public objects)}
 
@@ -36,13 +33,13 @@ data.frame (or tibble) with s3_uris and corresponding file paths to downloaded f
 }
 \description{
 Progress messages for downloading several S3 objects at once cannot be silenced.
-Like s3_get, S3 objects that already exists within the download_folder will not be re downloaded
+Like s3_get, S3 objects that have already been downloaded will not be re downloaded
 }
 \examples{
 \donttest{
 s3_get_files(c(
     "s3://geomarker/testing_downloads/mtcars.rds",
     "s3://geomarker/testing_downloads/mtcars.fst"
-), download_folder = tempdir())
+))
 }
 }
