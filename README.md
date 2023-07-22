@@ -7,8 +7,6 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/s3)](https://CRAN.R-project.org/package=s3)
-[![R build
-status](https://github.com/geomarker-io/s3/workflows/R-CMD-check/badge.svg)](https://github.com/geomarker-io/s3/actions)
 [![R-CMD-check](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -74,7 +72,7 @@ s3_get_files(c(
 #> ℹ 1 file totaling 1.23 kB will be downloaded to '/Users/broeg1/code/s3/s3_downloads'
 #> → Downloading 1 file.
 #> → Got 0 files, downloading 1
-#> ✔ Downloaded 1 file in 98ms.
+#> ✔ Downloaded 1 file in 123ms.
 ```
 
 ### Private Files
