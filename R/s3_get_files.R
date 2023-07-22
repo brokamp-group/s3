@@ -1,6 +1,7 @@
 #' download several s3 files
-#'
-#' @export
+#' 
+#' Progress messages for downloading several S3 objects at once cannot be silenced.
+#' Like s3_get, S3 objects that already exists within the download_folder will not be re downloaded
 #' @param s3_uri vector of S3 object URIs
 #' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
 #' @param download_folder location to download S3 objects
@@ -10,34 +11,15 @@
 #' @param public defaults to FALSE; if TRUE, ignore any environment
 #'                    variables specifying AWS credentials and
 #'                    attempt to download the file as publicly available
-#' @return tibble with s3_uris and corresponding file paths to downloaded files (invisibly)
+#' @return data.frame (or tibble) with s3_uris and corresponding file paths to downloaded files (invisibly)
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' s3_get_files(c(
 #'     "s3://geomarker/testing_downloads/mtcars.rds",
 #'     "s3://geomarker/testing_downloads/mtcars.fst"
-#' ))
-#'
-#' dl_results <- s3_get_files(c(
-#'     "s3://geomarker/testing_downloads/mtcars.rds",
-#'     "s3://geomarker/testing_downloads/mtcars_again.rds"
-#' ))
-#' lapply(dl_results$file_path, readRDS)
-#'
-#' # download some larger files
-#' s3_get_files(s3_uri = c(
-#'     "s3://geomarker/testing_downloads/zctas_2000_contig_us_5072.rds",
-#'     "s3://geomarker/testing_downloads/county_fips_contig_us_5072.rds"
-#' ))
+#' ), download_folder = tempdir())
 #' }
-#' @details
-#' Progress messages for downloading several S3 objects at once cannot be silenced.
-#'
-#' Like s3_get, S3 objects that already exists within the download_folder will not be re downloaded
-#'
-#' Invisibly returning the S3 object file paths allows for further usage of files without hard coding.
-#' (See example)
-
+#' @export
 s3_get_files <-
   function(s3_uri,
            region = "us-east-2",
@@ -49,8 +31,8 @@ s3_get_files <-
            public = FALSE) {
 
   out <-
-    purrr::map(s3_uri, s3_parse_uri) %>%
-    dplyr::bind_rows() %>%
+    purrr::map(s3_uri, s3_parse_uri) |>
+    dplyr::bind_rows() |>
     dplyr::mutate(exists_already = purrr::map_lgl(uri,
       s3_check_for_file_local,
       download_folder = download_folder,
@@ -58,8 +40,8 @@ s3_get_files <-
     ))
 
   out <-
-    out %>%
-    dplyr::rowwise() %>%
+    out |>
+    dplyr::rowwise() |>
     dplyr::mutate(
       file_path =
         fs::path_join(c(
@@ -79,7 +61,7 @@ s3_get_files <-
     }
 
     if (n_exist > 0 & !force) {
-      cli::cli_alert_info("{n_exist} file{?s} already exist")
+      cli::cli_alert_info("{n_exist} file{?s} already exis{?ts/t}")
     }
 
     if (force) out$exists_already <- TRUE
@@ -92,7 +74,7 @@ s3_get_files <-
     if (interactive() & confirm) ui_confirm()
 
     download_files_with_progress <- function(...) {
-        sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_to_dl} files.")
+        sb <- cli::cli_status("{cli::symbol$arrow_right} Downloading {n_to_dl} file{?s}.")
 
         file_paths <- vector("list", length = n_to_dl)
 

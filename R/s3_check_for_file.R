@@ -47,7 +47,7 @@ s3_check_for_file_s3 <- function(s3_uri,
   }
 
   s3_response <-
-    httr::HEAD(url_get) %>%
+    httr::HEAD(url_get) |>
     httr::status_code()
 
   if (s3_response == 200) return(invisible(TRUE))

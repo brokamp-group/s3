@@ -1,4 +1,3 @@
-# get size of s3 file (number of bytes)
 s3_file_size <- function(s3_uri, region = "us-east-2", public = FALSE) {
 
   s3_uri_parsed <- s3_parse_uri(s3_uri)
@@ -13,7 +12,7 @@ s3_file_size <- function(s3_uri, region = "us-east-2", public = FALSE) {
   }
 
   s3_response <- httr::HEAD(url_get)
-  file_size <- httr::headers(s3_response)[["Content-Length"]] %>%
+  file_size <- httr::headers(s3_response)[["Content-Length"]] |>
     as.numeric()
 
     return(invisible(file_size))

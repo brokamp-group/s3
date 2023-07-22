@@ -9,3 +9,5 @@ ui_confirm <- function() {
     if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
     return(invisible(TRUE))
 }
+
+utils::globalVariables(c("uri", "bucket", "folder", "file_name", "file_path", "exists_already"))

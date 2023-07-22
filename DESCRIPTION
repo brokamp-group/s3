@@ -1,6 +1,6 @@
 Package: s3
-Title: Download Files from AWS S3
-Version: 0.3.1
+Title: Download Files from 'AWS S3'
+Version: 0.4.0
 Authors@R: c(
     person(given = "Cole",
            family = "Brokamp",
@@ -11,18 +11,16 @@ Authors@R: c(
     family = "Rasnick",
     role = c("aut"),
     email = "erika.rasnick@cchmc.org"))
-Description: Download files hosted on AWS S3 to a local directory based on their URI. Avoid downloading files that are already present locally.  Allow for customization of where to store downloaded files.
+Description: Download files hosted on 'AWS S3' (Amazon Web Services Simple Storage Service; <https://aws.amazon.com/s3/>) to a local directory based on their URI. Avoid downloading files that are already present locally.  Allow for customization of where to store downloaded files.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Imports: 
     cli,
-    magrittr,
     prettyunits,
     fs,
-    tibble,
     httr,
     glue,
     purrr (>= 0.3.4),

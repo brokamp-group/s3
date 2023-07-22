@@ -4,9 +4,9 @@
 \name{s3-package}
 \alias{s3}
 \alias{s3-package}
-\title{s3: Download Files from AWS S3}
+\title{s3: Download Files from 'AWS S3'}
 \description{
-Download files hosted on AWS S3 to a local directory based on their URI. Avoid downloading files that are already present locally.  Allow for customization of where to store downloaded files.
+Download files hosted on 'AWS S3' (\url{https://aws.amazon.com/s3/}) to a local directory based on their URI. Avoid downloading files that are already present locally. Allow for customization of where to store downloaded files.
 }
 \seealso{
 Useful links:
