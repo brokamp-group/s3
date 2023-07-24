@@ -14,9 +14,10 @@
 #' @importFrom prettyunits pretty_sec
 #' @examples
 #' \donttest{
-#' s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
+#' the_file <- s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
 #'     readRDS()
+#' unlink(the_file)
 #' }
 #' @export
 s3_get <- function(s3_uri,
@@ -65,5 +66,5 @@ s3_get <- function(s3_uri,
     progress
   )
 
-    return(invisible(dest_file))
+  return(invisible(dest_file))
 }

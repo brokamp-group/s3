@@ -37,9 +37,10 @@ Like s3_get, S3 objects that have already been downloaded will not be re downloa
 }
 \examples{
 \donttest{
-s3_get_files(c(
+the_files <- s3_get_files(c(
     "s3://geomarker/testing_downloads/mtcars.rds",
     "s3://geomarker/testing_downloads/mtcars.fst"
 ))
+unlink(the_files$file_path)
 }
 }

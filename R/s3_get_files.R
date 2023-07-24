@@ -13,10 +13,11 @@
 #' @return data.frame (or tibble) with s3_uris and corresponding file paths to downloaded files (invisibly)
 #' @examples
 #' \donttest{
-#' s3_get_files(c(
+#' the_files <- s3_get_files(c(
 #'     "s3://geomarker/testing_downloads/mtcars.rds",
 #'     "s3://geomarker/testing_downloads/mtcars.fst"
 #' ))
+#' unlink(the_files$file_path)
 #' }
 #' @export
 s3_get_files <-

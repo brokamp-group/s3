@@ -36,8 +36,9 @@ s3_get will reuse, rather than redownload, an S3 object if it has been previousl
 }
 \examples{
 \donttest{
-s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
+the_file <- s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
     readRDS()
+unlink(the_file)
 }
 }
