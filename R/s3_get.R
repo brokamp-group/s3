@@ -1,6 +1,6 @@
 #' download s3 file
-#'
-#' s3_get will reuse, rather than redownload, an S3 object if it has been previously downloaded.
+#' 
+#' Files are downloaded to the R user data directory (i.e., `tools::R_user_dir("s3", "data")`) so they can be cached across all of an R user's sessions and projects. Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable (see `?tools::R_user_dir`). 
 #' @param s3_uri URI for an S3 object
 #' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
 #' @param quiet suppress messages?
@@ -14,6 +14,7 @@
 #' @importFrom prettyunits pretty_sec
 #' @examples
 #' \donttest{
+#' Sys.setenv("R_USER_DATA_DIR" = tempdir())
 #' the_file <- s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
 #'     readRDS()

@@ -49,8 +49,9 @@ library(s3)
 
 Download a single file specified by its S3 URI with:
 
-```{r, include=FALSE}
+```{r, echo = FALSE}
 Sys.unsetenv(c('AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'))
+Sys.setenv("R_USER_DATA_DIR" = tempdir())
 ```
 
 ```{r}

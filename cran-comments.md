@@ -6,8 +6,8 @@ Based on feedback from CRAN, I have:
 - used donttest for long running examples
 - eliminated problem with exporting magrittr pipe
 - be more specific with return types for exported functions
-- write to tempdir() in examples/vignettes/tests
 - ensure files will not be written to users home directory by default
+- write to tempdir() in examples/vignettes/tests
 
 ## R CMD check results
 

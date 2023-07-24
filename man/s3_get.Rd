@@ -32,7 +32,7 @@ attempt to download the file as publicly available}
 a character string that is the file path to the downloaded file (invisibly)
 }
 \description{
-s3_get will reuse, rather than redownload, an S3 object if it has been previously downloaded.
+Files are downloaded to the R user data directory (i.e., \code{tools::R_user_dir("s3", "data")}) so they can be cached across all of an R user's sessions and projects. Specify an alternative download location by setting the \code{R_USER_DATA_DIR} environment variable (see \code{?tools::R_user_dir}).
 }
 \examples{
 \donttest{
