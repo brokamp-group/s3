@@ -10,18 +10,21 @@ status](https://www.r-pkg.org/badges/version/s3)](https://CRAN.R-project.org/pac
 [![R-CMD-check](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-s3 is an R package designed to download files hosted on AWS S3.
+s3 is an R package designed to download files from [AWS
+S3](https://aws.amazon.com/s3/). Files are downloaded to the R user data
+directory (i.e., `tools::R_user_dir("s3", "data")`) so they can be
+cached across all of an R user’s sessions and projects. Specify an
+alternative download location by setting the `R_USER_DATA_DIR`
+environment variable (see `?tools::R_user_dir`).
 
-Downloads can be saved to a location shared across R sessions/users and
-download functions always return paths to downloaded files. Files
-already present in the download location will be used before trying to
-download a file again. This means more concise code for reading/loading
-files after downloading them (if they are not already downloaded). For
-example:
-
-``` r
-s3::s3_get("s3://modis-aod-nasa/2020.05.22.tif")
-```
+A file is specified from AWS S3 using its URI and downloaded using the
+`s3_get()` and `s3_get_files()` functions; e.g.,
+`s3_get("s3://modis-aod-nasa/2020.05.22.tif")`. The get functions always
+(invisibly) return paths to downloaded files, making it straightforward
+to read downloaded files into R. Files already present in the download
+location will be used before trying to download a file again. This means
+more concise code for downloading files, if they are not already
+downloaded, and reading files within R.
 
 ## Installation
 
@@ -46,18 +49,18 @@ remotes::install_github("geomarker-io/s3")
 library(s3)
 ```
 
-Download a single file specified by its [URI](#URI) with:
+Download a single file specified by its S3 URI with:
 
 ``` r
 s3_get("s3://geomarker/testing_downloads/mtcars.rds")
 ```
 
-If a file has already been downloaded or already exists, then it will
-not be re-downloaded:
+If a file has already been downloaded, then it will not be
+re-downloaded:
 
 ``` r
 s3_get("s3://geomarker/testing_downloads/mtcars.rds")
-#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/Users/broeg1/code/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds'
+#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/var/folders/jd/2ft0p3gj529g4pwdsm0pbgmm0000gq/T/RtmpjvaA0X/R/s3/geomarker/testing_downloads/mtcars.rds'
 ```
 
 Download multiple files with:
@@ -69,10 +72,10 @@ s3_get_files(c(
         ),
     confirm = FALSE)
 #> ℹ 1 file already exists
-#> ℹ 1 file totaling 1.23 kB will be downloaded to '/Users/broeg1/code/s3/s3_downloads'
+#> ℹ 1 file totaling 1.23 kB will be downloaded to /var/folders/jd/2ft0p3gj529g4pwdsm0pbgmm0000gq/T//RtmpjvaA0X/R/s3
 #> → Downloading 1 file.
 #> → Got 0 files, downloading 1
-#> ✔ Downloaded 1 file in 123ms.
+#> ✔ Downloaded 1 file in 104ms.
 ```
 
 ### Private Files
@@ -111,17 +114,17 @@ s3:::check_for_aws_env_vars()
 ### Downloaded file paths
 
 Files are saved within a directory structure matching that of the S3
-URI; this directory is created if necessary. `s3_get` and `s3_get_files`
-both invisibly return the file path(s) of the downloaded files so that
-they can be further used to access the downloaded files. This makes it
-possible for different users with different operating systems and/or
-different project file structures and locations to utilize a downloaded
-S3 file without changing their source code:
+URI. `s3_get` and `s3_get_files` both invisibly return the file path(s)
+of the downloaded files so that they can be further used to access the
+downloaded files. This makes it possible for different users with
+different operating systems and/or different project file structures and
+locations to utilize a downloaded S3 file without changing their source
+code:
 
 ``` r
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
     readRDS()
-#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/Users/broeg1/code/s3/s3_downloads/geomarker/testing_downloads/mtcars.rds'
+#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/var/folders/jd/2ft0p3gj529g4pwdsm0pbgmm0000gq/T/RtmpjvaA0X/R/s3/geomarker/testing_downloads/mtcars.rds'
 #>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #> Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #> Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
@@ -156,46 +159,3 @@ s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
 #> Maserati Bora       15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
 #> Volvo 142E          21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
 ```
-
-### Customizing download location
-
-By default, files downloaded from S3 will be stored in a folder called
-`s3_downloads` located within the current working directory. This can be
-changed when downloading files by using the `download_folder` argument:
-
-``` r
-s3_get("s3://geomarker/testing_downloads/mtcars.rds",
-       download_folder = fs::path_home('~/Desktop/s3_downloads'))
-```
-
-This can also be changed for the entire session by using the option
-`s3.download_folder`. For example, specifying
-`options(s3.download_folder = /scratch/broeg1/s3_downloads)` will write
-all downloaded files to `/scratch/broeg1/s3_downloads`.
-
-Using a folder for all downloads will prevent duplication of files
-within different working directories, instead allowing all R sessions to
-access these files. This could be combined with something like
-[`rappdirs`](https://github.com/r-lib/rappdirs) to share files across
-users or temporarily cache them.
-
-As above, this feature also allows different users to store downloaded
-S3 files in different locations (e.g. a network mounted drive, a scratch
-folder on a high performance cluster, an external hard drive, a
-temporary directory) without having to change their R script to specify
-file paths specific to their computer.
-
-### URI
-
-URI stands for [Universal Resource
-Identifier](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier),
-which is a federated and extensible naming system. In practice, this
-means that a URI is a character string that can uniquely identify a
-particular resource. An example of a commonly used URI scheme is `https`
-for identifying web resources, e.g. `https://r-project.org`.
-
-Here, we use the `s3` scheme as defined by AWS. For example, the URI for
-a file hosted on S3 called `mtcars.rds` in a bucket called `geomarker`
-in a folder called `test_downloads` would be:
-
-`s3://geomarker/test_downloads/mtcars.rds`

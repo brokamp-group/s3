@@ -1,9 +1,8 @@
 #' download s3 file
-#'
-#' s3_get will reuse, rather than redownload, an S3 object if it already exists within the `download_folder`.
+#' 
+#' Files are downloaded to the R user data directory (i.e., `tools::R_user_dir("s3", "data")`) so they can be cached across all of an R user's sessions and projects. Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable (see `?tools::R_user_dir`). 
 #' @param s3_uri URI for an S3 object
 #' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
-#' @param download_folder location to download S3 object
 #' @param quiet suppress messages?
 #' @param force force download to overwrite existing S3 object
 #' @param progress show download progress? (currently only for public objects)
@@ -15,14 +14,15 @@
 #' @importFrom prettyunits pretty_sec
 #' @examples
 #' \donttest{
-#' s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds", download_folder = tempdir())
+#' Sys.setenv("R_USER_DATA_DIR" = tempdir())
+#' the_file <- s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 #' s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
 #'     readRDS()
+#' unlink(the_file)
 #' }
 #' @export
 s3_get <- function(s3_uri,
                    region = "us-east-2",
-                   download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
                    quiet = FALSE,
                    progress = FALSE,
                    force = FALSE,
@@ -32,17 +32,17 @@ s3_get <- function(s3_uri,
 
   dest_file <-
     fs::path_join(c(
-      download_folder,
+      tools::R_user_dir("s3", "data"),
       s3_uri_parsed$bucket,
       s3_uri_parsed$folder,
       s3_uri_parsed$file_name
     ))
 
-  if (!force & s3_check_for_file_local(s3_uri, download_folder, quiet = quiet)) {
+  if (!force & s3_check_for_file_local(s3_uri, quiet = quiet)) {
     return(invisible(dest_file))
   }
 
-  s3_check_for_file_s3(s3_uri, region, public, download_folder)
+  s3_check_for_file_s3(s3_uri, region, public)
 
   fs::dir_create(fs::path_dir(dest_file))
 
@@ -67,5 +67,5 @@ s3_get <- function(s3_uri,
     progress
   )
 
-    return(invisible(dest_file))
+  return(invisible(dest_file))
 }

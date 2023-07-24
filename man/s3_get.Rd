@@ -7,7 +7,6 @@
 s3_get(
   s3_uri,
   region = "us-east-2",
-  download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads")),
   quiet = FALSE,
   progress = FALSE,
   force = FALSE,
@@ -18,8 +17,6 @@ s3_get(
 \item{s3_uri}{URI for an S3 object}
 
 \item{region}{AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)}
-
-\item{download_folder}{location to download S3 object}
 
 \item{quiet}{suppress messages?}
 
@@ -35,12 +32,13 @@ attempt to download the file as publicly available}
 a character string that is the file path to the downloaded file (invisibly)
 }
 \description{
-s3_get will reuse, rather than redownload, an S3 object if it already exists within the \code{download_folder}.
+Files are downloaded to the R user data directory (i.e., \code{tools::R_user_dir("s3", "data")}) so they can be cached across all of an R user's sessions and projects. Specify an alternative download location by setting the \code{R_USER_DATA_DIR} environment variable (see \code{?tools::R_user_dir}).
 }
 \examples{
 \donttest{
-s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds", download_folder = tempdir())
+the_file <- s3_get(s3_uri = "s3://geomarker/testing_downloads/mtcars.rds")
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
     readRDS()
+unlink(the_file)
 }
 }

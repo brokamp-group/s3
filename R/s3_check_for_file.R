@@ -1,13 +1,10 @@
-s3_check_for_file_local <- function(s3_uri,
-                                    quiet = FALSE,
-                                    download_folder = getOption("s3.download_folder",
-                                                                fs::path_wd("s3_downloads"))) {
+s3_check_for_file_local <- function(s3_uri, quiet = FALSE) {
 
   s3_uri_parsed <- s3_parse_uri(s3_uri)
 
   dest_file <-
     fs::path_join(c(
-      download_folder,
+      tools::R_user_dir("s3", "data"),
       s3_uri_parsed$bucket,
       s3_uri_parsed$folder,
       s3_uri_parsed$file_name
@@ -22,16 +19,13 @@ s3_check_for_file_local <- function(s3_uri,
 
 }
 
-s3_check_for_file_s3 <- function(s3_uri,
-                                 region = "us-east-2",
-                                 public = FALSE,
-                                 download_folder = getOption("s3.download_folder", fs::path_wd("s3_downloads"))) {
+s3_check_for_file_s3 <- function(s3_uri, region = "us-east-2", public = FALSE){
 
   s3_uri_parsed <- s3_parse_uri(s3_uri)
 
   dest_file <-
     fs::path_join(c(
-      download_folder,
+      tools::R_user_dir("s3", "data"),
       s3_uri_parsed$bucket,
       s3_uri_parsed$folder,
       s3_uri_parsed$file_name
