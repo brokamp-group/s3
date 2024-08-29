@@ -10,7 +10,8 @@ s3_get_files(
   progress = FALSE,
   force = FALSE,
   confirm = TRUE,
-  public = FALSE
+  public = FALSE,
+  data_dir = tools::R_user_dir("s3", "data")
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ s3_get_files(
 \item{public}{defaults to FALSE; if TRUE, ignore any environment
 variables specifying AWS credentials and
 attempt to download the file as publicly available}
+
+\item{data_dir}{root directory for downloaded files (defaults to \code{tools::R_user_dir("s3", "data")})}
 }
 \value{
 data.frame (or tibble) with s3_uris and corresponding file paths to downloaded files (invisibly)
@@ -37,6 +40,7 @@ Like s3_get, S3 objects that have already been downloaded will not be re downloa
 }
 \examples{
 \donttest{
+Sys.setenv("R_USER_DATA_DIR" = tempdir())
 the_files <- s3_get_files(c(
     "s3://geomarker/testing_downloads/mtcars.rds",
     "s3://geomarker/testing_downloads/mtcars.fst"
