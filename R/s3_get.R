@@ -1,8 +1,12 @@
 #' download s3 file
 #' 
-#' Files are downloaded to the R user data directory (i.e., `tools::R_user_dir("s3", "data")`) so they can be cached across all of an R user's sessions and projects. Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable (see `?tools::R_user_dir`). 
+#' Files are downloaded to the R user data directory (i.e., `tools::R_user_dir("s3", "data")`) so they
+#' can be cached across all of an R user's sessions and projects.
+#' Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable
+#' (see `?tools::R_user_dir`) or by using the `data_dir` argument.
 #' @param s3_uri URI for an S3 object
-#' @param region AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)
+#' @param region AWS region for bucket containing the file
+#' (defaults to "us-east-2", but only required for private files)
 #' @param quiet suppress messages?
 #' @param force force download to overwrite existing S3 object
 #' @param progress show download progress? (currently only for public objects)

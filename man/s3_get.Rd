@@ -17,7 +17,8 @@ s3_get(
 \arguments{
 \item{s3_uri}{URI for an S3 object}
 
-\item{region}{AWS region for bucket containing the file (defaults to "us-east-2", but only required for private files)}
+\item{region}{AWS region for bucket containing the file
+(defaults to "us-east-2", but only required for private files)}
 
 \item{quiet}{suppress messages?}
 
@@ -35,7 +36,10 @@ attempt to download the file as publicly available}
 a character string that is the file path to the downloaded file (invisibly)
 }
 \description{
-Files are downloaded to the R user data directory (i.e., \code{tools::R_user_dir("s3", "data")}) so they can be cached across all of an R user's sessions and projects. Specify an alternative download location by setting the \code{R_USER_DATA_DIR} environment variable (see \code{?tools::R_user_dir}).
+Files are downloaded to the R user data directory (i.e., \code{tools::R_user_dir("s3", "data")}) so they
+can be cached across all of an R user's sessions and projects.
+Specify an alternative download location by setting the \code{R_USER_DATA_DIR} environment variable
+(see \code{?tools::R_user_dir}), or by using the \code{data_dir} argument.
 }
 \examples{
 \donttest{
