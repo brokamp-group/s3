@@ -22,6 +22,7 @@ Useful links:
 Authors:
 \itemize{
   \item Erika Rasnick \email{erika.rasnick@cchmc.org}
+  \item Robrecht Cannoodt
 }
 
 }
