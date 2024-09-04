@@ -1,6 +1,7 @@
 # https://gist.github.com/sada1993/055f6d3c546cb97ea9d3b11f9a92e91e#file-generate_s3_signed_url-r
 s3_get_signed_url <- function(s3_uri, region = "us-east-2", verb = "GET"){
 
+  rlang::check_installed(c("digest", "aws.signature"), "to create signed S3 URLs")
   parsed_uri <- s3_parse_uri(s3_uri)
 
   key <- Sys.getenv("AWS_ACCESS_KEY_ID")
@@ -14,6 +15,7 @@ s3_get_signed_url <- function(s3_uri, region = "us-east-2", verb = "GET"){
   region_encoded <- glue::glue("{region}/")
   
   body_hash <- tolower(digest::digest("", algo = "sha256", serialize = FALSE))
+
   
   sig <-
     aws.signature::signature_v4_auth(
