@@ -35,5 +35,5 @@ Suggests:
     testthat,
     digest,
     withr
-URL: https://github.com/geomarker-io/s3
-BugReports: https://github.com/geomarker-io/s3/issues
+URL: https://github.com/brokamp-group/s3
+BugReports: https://github.com/brokamp-group/s3/issues
