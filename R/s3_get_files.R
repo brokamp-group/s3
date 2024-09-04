@@ -10,6 +10,7 @@
 #' @param public defaults to FALSE; if TRUE, ignore any environment
 #'                    variables specifying AWS credentials and
 #'                    attempt to download the file as publicly available
+#' @param data_dir root directory for downloaded files (defaults to `tools::R_user_dir("s3", "data")`)
 #' @return data.frame (or tibble) with s3_uris and corresponding file paths to downloaded files (invisibly)
 #' @examples
 #' \donttest{
@@ -27,7 +28,8 @@ s3_get_files <-
            progress = FALSE,
            force = FALSE,
            confirm = TRUE,
-           public = FALSE) {
+           public = FALSE,
+           data_dir = tools::R_user_dir("s3", "data")) {
 
   out <-
     purrr::map(s3_uri, s3_parse_uri) |>
@@ -43,7 +45,7 @@ s3_get_files <-
     dplyr::mutate(
       file_path =
         fs::path_join(c(
-          tools::R_user_dir("s3", "data"),
+          data_dir,
           bucket,
           folder,
           file_name
@@ -81,7 +83,7 @@ s3_get_files <-
                 id = sb,
                 "{cli::symbol$arrow_right} Got {n_to_dl - i} file{?s}, downloading {i}"
             )
-            file_paths[i] <- s3_get(need_to_download[i, "uri"], ...)
+            file_paths[i] <- s3_get(need_to_download[i, "uri"], data_dir = data_dir, ...)
         }
 
         cli::cli_status_clear(id = sb)
