@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/s3)](https://CRAN.R-project.org/package=s3)
-[![R-CMD-check](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/brokamp-group/s3/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brokamp-group/s3/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 s3 is an R package designed to download files from [AWS S3](<https://aws.amazon.com/s3/>). Files are downloaded to the R user data directory (i.e., `tools::R_user_dir("s3", "data")`) so they can be cached across all of an R user's sessions and projects. Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable (see `?tools::R_user_dir`). 

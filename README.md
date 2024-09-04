@@ -7,7 +7,7 @@
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/s3)](https://CRAN.R-project.org/package=s3)
-[![R-CMD-check](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/s3/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/brokamp-group/s3/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/brokamp-group/s3/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 s3 is an R package designed to download files from [AWS
@@ -60,7 +60,7 @@ re-downloaded:
 
 ``` r
 s3_get("s3://geomarker/testing_downloads/mtcars.rds")
-#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/var/folders/jd/2ft0p3gj529g4pwdsm0pbgmm0000gq/T/RtmpjvaA0X/R/s3/geomarker/testing_downloads/mtcars.rds'
+#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/var/folders/pg/q33bfwtj57d_v3vqpl7g26400000gn/T/RtmpTSph6V/R/s3/geomarker/testing_downloads/mtcars.rds'
 ```
 
 Download multiple files with:
@@ -72,10 +72,10 @@ s3_get_files(c(
         ),
     confirm = FALSE)
 #> ℹ 1 file already exists
-#> ℹ 1 file totaling 1.23 kB will be downloaded to /var/folders/jd/2ft0p3gj529g4pwdsm0pbgmm0000gq/T//RtmpjvaA0X/R/s3
+#> ℹ 1 file totaling 1.23 kB will be downloaded to /var/folders/pg/q33bfwtj57d_v3vqpl7g26400000gn/T//RtmpTSph6V/R/s3
 #> → Downloading 1 file.
 #> → Got 0 files, downloading 1
-#> ✔ Downloaded 1 file in 104ms.
+#> ✔ Downloaded 1 file in 150ms.
 ```
 
 ### Private Files
@@ -124,7 +124,7 @@ code:
 ``` r
 s3_get("s3://geomarker/testing_downloads/mtcars.rds") |>
     readRDS()
-#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/var/folders/jd/2ft0p3gj529g4pwdsm0pbgmm0000gq/T/RtmpjvaA0X/R/s3/geomarker/testing_downloads/mtcars.rds'
+#> ℹ 's3://geomarker/testing_downloads/mtcars.rds' already exists at '/var/folders/pg/q33bfwtj57d_v3vqpl7g26400000gn/T/RtmpTSph6V/R/s3/geomarker/testing_downloads/mtcars.rds'
 #>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 #> Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 #> Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
